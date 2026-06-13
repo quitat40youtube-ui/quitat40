@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coast FIRE images — by timestamp</title>
+<style>
+  body{font-family:system-ui,Arial,sans-serif;margin:0;background:#fafafa;color:#111}
+  header{position:sticky;top:0;background:#fff;border-bottom:1px solid #ddd;padding:16px;z-index:10}
+  h1{font-size:18px;margin:0 0 6px}
+  p{margin:6px 0;font-size:14px;color:#444}
+  button{font-size:16px;padding:12px 18px;border:0;border-radius:8px;background:#2563eb;color:#fff;cursor:pointer}
+  button:disabled{background:#9ca3af;cursor:default}
+  #status{font-size:13px;color:#2563eb;margin-left:10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:16px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+  .card img{width:100%;height:150px;object-fit:contain;background:#fff;border-bottom:1px solid #eee}
+  .ts{font-weight:700;font-size:16px;padding:8px 10px 0}
+  .ds{font-size:12px;color:#555;padding:2px 10px 8px;flex:1}
+  .save{display:block;text-align:center;padding:8px;background:#f3f4f6;color:#2563eb;text-decoration:none;font-size:13px;border-top:1px solid #eee}
+</style>
+</head>
+<body>
+<header>
+  <h1>Coast FIRE — 163 images, named by timestamp</h1>
+  <p>Each picture is labelled with the script time it belongs to (e.g. <b>0:00</b>).</p>
+  <p><b>To save them all:</b> click the blue button. Your browser may ask "allow this site to download multiple files?" — click <b>Allow</b>. They'll land in your <b>Downloads</b> folder named <b>0:00.png, 0:04.png …</b><br>
+  <small>(If your computer won't allow a colon ":" in a file name, they'll save as 0-00.png instead — same order.)</small></p>
+  <button id="dl">⬇ Download all 163 images</button>
+  <span id="status"></span>
+</header>
+<div class="grid" id="grid"></div>
+<script>
+const ITEMS = [
+  {
+    "t": "0:00",
+    "f": "0:00.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_125950_6f93e61d-8407-4c4f-ae36-25a629db9587.png",
+    "d": "A man with one thin line arm raised pointing toward the viewer, a big wobbly black question mark floating beside his head."
+  },
+  {
+    "t": "0:04",
+    "f": "0:04.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_125955_1eb2def9-40ac-4ee9-a06f-c6c8041b45a3.png",
+    "d": "A man standing relaxed with arms down, a big wobbly hand-drawn text \"$1,000,000\" floating above his head."
+  },
+  {
+    "t": "0:07",
+    "f": "0:07.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_125959_6ef3b188-ee27-4dd1-a82f-f293a614999d.png",
+    "d": "A man shrugging with both arms out, beside him a four-leaf clover and a money bag each crossed out with a big black X."
+  },
+  {
+    "t": "0:10",
+    "f": "0:10.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130003_8c8e5684-dfbe-4c39-b4c5-dda2cb199bfa.png",
+    "d": "A man standing, beside him a jagged stock price line chart crossed out with a big black X."
+  },
+  {
+    "t": "0:14",
+    "f": "0:14.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130006_a5d9778a-31d5-4a35-9295-8470e8427d92.png",
+    "d": "A man standing with a glowing lightbulb floating above his head."
+  },
+  {
+    "t": "0:19",
+    "f": "0:19.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130009_63010dde-c1ba-462c-ae72-f63b5cda8407.png",
+    "d": "A man standing beside huge wobbly hand-drawn text \"COAST FIRE\" with a small flame and a wavy ocean line below it."
+  },
+  {
+    "t": "0:23",
+    "f": "0:23.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130012_27964893-981e-4e73-9a18-6075c327443a.png",
+    "d": "A man standing holding a small calculator in one hand."
+  },
+  {
+    "t": "0:26",
+    "f": "0:26.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130015_3095a97e-7460-4458-98bc-09237c7508c4.png",
+    "d": "A man pointing at a small goal flag planted on the ground beside him."
+  },
+  {
+    "t": "0:30",
+    "f": "0:30.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130018_eec0bc49-216c-4b93-a356-ced936ebd55d.png",
+    "d": "A man standing beside a chalkboard covered in wobbly numbers with plus and equals signs."
+  },
+  {
+    "t": "0:33",
+    "f": "0:33.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130020_ecf1fe0c-ab82-4d21-a68e-9846cba85d5e.png",
+    "d": "A man pointing at three floating wobbly labels reading \"20s\", \"30s\" and \"40s\"."
+  },
+  {
+    "t": "0:35",
+    "f": "0:35.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130024_4eb25c4b-ad3c-42d8-b1fe-fbf4a3695de1.png",
+    "d": "A man with a surprised open mouth and a small explosion burst drawn above his head, mind blown."
+  },
+  {
+    "t": "0:41",
+    "f": "0:41.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130027_c89f0be0-5109-4640-a01c-a04f367b3a8a.png",
+    "d": "A man standing at a drawn starting line on the ground, leaning forward ready to run."
+  },
+  {
+    "t": "0:43",
+    "f": "0:43.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130030_bbf36e1e-4f52-4308-bc07-2ac1abee4f5c.png",
+    "d": "A man standing holding a small flame icon in his hand."
+  },
+  {
+    "t": "0:45",
+    "f": "0:45.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130037_dbdb9aba-fcfe-415f-9ef3-e1dcb4b064bf.png",
+    "d": "A man pointing at a big empty square box frame beside him."
+  },
+  {
+    "t": "0:50",
+    "f": "0:50.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130040_fdbec524-3801-43de-b8c7-12150da0e5a9.png",
+    "d": "A man standing beside huge wobbly hand-drawn text \"FIRE\" with a flame above it."
+  },
+  {
+    "t": "0:53",
+    "f": "0:53.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130047_f2cafcd1-00a4-4e2e-994e-1e17a40195ba.png",
+    "d": "A man holding up one finger with a small lightbulb beside his head, a simple idea."
+  },
+  {
+    "t": "0:56",
+    "f": "0:56.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130153_8d651a62-b219-45f2-9649-12b6c4ab29e7.png",
+    "d": "A man pointing at a wall calendar with a big dollar sign on it."
+  },
+  {
+    "t": "0:59",
+    "f": "0:59.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130156_98008d94-778b-4d90-92bb-9e596cc2f156.png",
+    "d": "A man beside a tall stack of coins growing into a big pile, a portfolio."
+  },
+  {
+    "t": "1:02",
+    "f": "1:02.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130223_9416ba12-445d-4d1c-ad93-119c8eb06206.png",
+    "d": "A man beside a briefcase crossed out with a big black X, no more work."
+  },
+  {
+    "t": "1:04",
+    "f": "1:04.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130238_27cd2986-221f-4ca5-a560-916c12a5f4a1.png",
+    "d": "A man holding a small calculator and looking at it thinking, with a thought bubble."
+  },
+  {
+    "t": "1:07",
+    "f": "1:07.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130242_96631e64-8db3-4b3a-adf5-903b26333ed0.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"x25\" floating beside him."
+  },
+  {
+    "t": "1:11",
+    "f": "1:11.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130243_336415c9-bc63-4051-82e1-39e4b43166fd.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"4%\" floating beside him."
+  },
+  {
+    "t": "1:14",
+    "f": "1:14.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130243_bc11f2a4-386b-4d1f-851b-62a29209a3e5.png",
+    "d": "A man holding up a sheet of paper document labeled \"STUDY\"."
+  },
+  {
+    "t": "1:16",
+    "f": "1:16.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130244_86cd6e93-afc7-4b53-bd3d-c6c170abdfc3.png",
+    "d": "A man holding a big magnifying glass over a jagged line chart."
+  },
+  {
+    "t": "1:20",
+    "f": "1:20.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130245_8e2ad397-b024-4c3a-bd39-0b20c3a701a4.png",
+    "d": "A man pointing at a simple pie chart with a few slices."
+  },
+  {
+    "t": "1:22",
+    "f": "1:22.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130246_a500fcee-f466-4d06-9dec-5bc5f1a71da9.png",
+    "d": "A man beside a big hourglass and a money bag."
+  },
+  {
+    "t": "1:28",
+    "f": "1:28.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130246_8c188baa-d234-4851-bd78-41d12b942d5c.png",
+    "d": "A man taking a small slice labeled \"4%\" out of a round pie chart with his hand."
+  },
+  {
+    "t": "1:34",
+    "f": "1:34.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130339_2a3aaacc-88a2-4315-9ec7-f1ee8892ac03.png",
+    "d": "A man pointing at a stock line chart with a big arrow going up."
+  },
+  {
+    "t": "1:37",
+    "f": "1:37.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130248_7181ac57-f686-49e3-b80f-3b73d9ee0e05.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"30 YEARS\" floating beside him."
+  },
+  {
+    "t": "1:42",
+    "f": "1:42.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130341_c80d1b38-eae8-4f70-b5e1-66fcf32728e9.png",
+    "d": "A man holding an open wallet stuffed with cash, with a big checkmark beside it."
+  },
+  {
+    "t": "1:44",
+    "f": "1:44.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130343_72155129-7970-40c0-99ab-05915f0c4bec.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$50,000 / YEAR\" floating beside him."
+  },
+  {
+    "t": "1:48",
+    "f": "1:48.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130345_38a46981-a10c-4022-9be6-ea1b7fcb9237.png",
+    "d": "A man beside huge wobbly hand-drawn text \"$50K x25 = $1.25M\"."
+  },
+  {
+    "t": "1:55",
+    "f": "1:55.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130347_dc5daf49-b793-4ad9-afc9-466bb4206726.png",
+    "d": "A man pointing at a round bullseye target labeled \"FIRE #\"."
+  },
+  {
+    "t": "1:59",
+    "f": "1:59.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130349_295f20c5-ac54-4c82-9f0a-265069b70cc5.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$80,000 / YEAR\" floating beside him."
+  },
+  {
+    "t": "2:02",
+    "f": "2:02.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130351_cdfbf790-b694-41e3-8e63-87b3ffcc17e3.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$2,000,000\" floating beside him."
+  },
+  {
+    "t": "2:04",
+    "f": "2:04.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130353_6d9312d4-b03b-4229-a784-09a5bcdca401.png",
+    "d": "A man beside a glass jar full of coins with a small upward growth arrow, money staying invested."
+  },
+  {
+    "t": "2:09",
+    "f": "2:09.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130413_2a29f22f-db3d-4ecb-a722-3758b56c5641.png",
+    "d": "A man beside a small plant growing out of a stack of coins while one hand picks a single coin off the top."
+  },
+  {
+    "t": "2:13",
+    "f": "2:13.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130415_68216178-4138-471d-b7cd-2098d5035b7c.png",
+    "d": "A man beside a static flat pile of cash crossed out with a big black X."
+  },
+  {
+    "t": "2:15",
+    "f": "2:15.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130417_07c0a51f-5287-45c6-b072-bfe16e981d20.png",
+    "d": "A man taking a small thin slice from a large growing pie chart with an upward arrow."
+  },
+  {
+    "t": "2:19",
+    "f": "2:19.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130419_a538fa60-aae6-435d-a1b6-f339151d88e7.png",
+    "d": "A man looking out at a long horizon line with a rising sun and a very long arrow stretching to the right."
+  },
+  {
+    "t": "2:22",
+    "f": "2:22.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130421_fed29908-39da-4448-b148-ad4e0d9a0dc8.png",
+    "d": "A man stepping in from the side pointing at wobbly text \"COAST FIRE\" with a flame and a wave."
+  },
+  {
+    "t": "2:25",
+    "f": "2:25.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130423_d5934d9f-4b90-4365-bdce-95030fb49764.png",
+    "d": "A man jumping with both arms raised up excited, with little motion lines around him."
+  },
+  {
+    "t": "2:29",
+    "f": "2:29.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130426_ebd9269a-c24b-49ef-88c1-88619719a100.png",
+    "d": "A man pointing at a milestone signpost standing on a winding path."
+  },
+  {
+    "t": "2:32",
+    "f": "2:32.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130427_fb76e15a-8121-4aa3-8243-38a17321c6ab.png",
+    "d": "A man flexing one arm to show a big round muscle bicep."
+  },
+  {
+    "t": "2:37",
+    "f": "2:37.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130442_35ecfc11-3c64-48ce-af86-1bec5e15a99b.png",
+    "d": "A man pointing at wobbly hand-drawn text \"COMPOUND INTEREST\" with a big snowball rolling beside it."
+  },
+  {
+    "t": "2:38",
+    "f": "2:38.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130444_ed6e5cdc-1d87-4c88-8614-2d8cfa4f7eb3.png",
+    "d": "A man pointing upward at a glowing lightbulb above his head."
+  },
+  {
+    "t": "2:40",
+    "f": "2:40.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130446_ee760584-92a8-4088-89bf-bc39a0d4a42d.png",
+    "d": "A man beside an alarm clock showing early morning and a small stack of coins."
+  },
+  {
+    "t": "2:42",
+    "f": "2:42.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130449_ddaf6c00-cfc0-44d7-9648-d05172b3f738.png",
+    "d": "A man sitting relaxed in a chair while a big arrow lifts a heavy barbell labeled \"MARKET\" for him."
+  },
+  {
+    "t": "2:45",
+    "f": "2:45.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130451_b4cd545a-1154-4b0d-bbe3-3cb227f5d2e6.png",
+    "d": "A man holding up one open palm in a stop gesture beside a single dollar bill."
+  },
+  {
+    "t": "2:48",
+    "f": "2:48.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130452_ed3804ed-e91d-4f67-a5b9-9624a1d0d777.png",
+    "d": "A man pointing at a single calendar page marked with a big black X."
+  },
+  {
+    "t": "2:50",
+    "f": "2:50.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130455_2e6a3a0d-90f8-4e6e-8cde-568994950535.png",
+    "d": "A man watching a tall plant grow by itself out of a pot of coins with no hands touching it."
+  },
+  {
+    "t": "2:52",
+    "f": "2:52.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130456_719c831b-13b3-4a5c-86ee-326327b34049.png",
+    "d": "A man pointing at a big upward arrow rising to a bullseye target labeled \"FIRE\"."
+  },
+  {
+    "t": "2:54",
+    "f": "2:54.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130513_fda551b0-c823-423f-a01d-a5638a7c170d.png",
+    "d": "A man pointing at a clock beside huge wobbly hand-drawn text \"65\"."
+  },
+  {
+    "t": "2:57",
+    "f": "2:57.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130515_c93232fc-2b88-4293-952c-fb1cf09c7904.png",
+    "d": "A man hitting a bullseye target with a dart, a big checkmark beside it."
+  },
+  {
+    "t": "2:59",
+    "f": "2:59.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130517_5b28e6a2-4030-45b6-a374-cecd20e80fc9.png",
+    "d": "A man beside a big closed padlock sitting on wobbly text \"RETIREMENT\"."
+  },
+  {
+    "t": "3:01",
+    "f": "3:01.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130519_bb9f9ea4-9aa9-41e3-935b-bac3ba9495cb.png",
+    "d": "A man coasting on a skateboard, relaxed and gliding."
+  },
+  {
+    "t": "3:03",
+    "f": "3:03.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130521_02346e88-7868-4121-b8fd-d0f44d74a559.png",
+    "d": "A man beside a piggy bank crossed out with a big black X."
+  },
+  {
+    "t": "3:04",
+    "f": "3:04.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130522_f3c77b2c-9161-4a7e-a4f3-3774e2d305d3.png",
+    "d": "A man standing relaxed with both hands behind his head, calm and carefree."
+  },
+  {
+    "t": "3:08",
+    "f": "3:08.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130524_0f6cb84b-7645-41cf-a32d-4c4c8f8451f4.png",
+    "d": "A man beside a money bag with several arrows pointing outward in different directions."
+  },
+  {
+    "t": "3:10",
+    "f": "3:10.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130526_ba3b222c-af5c-491c-840e-cfc118fd9803.png",
+    "d": "A man surrounded by a suitcase, an airplane, and a paint palette icons."
+  },
+  {
+    "t": "3:14",
+    "f": "3:14.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130542_8750ddd4-dd04-4a9e-8fc7-58fa570e84e8.png",
+    "d": "A man exhaling a relaxed sigh with a little curl of breath in front of his mouth, eyes closed calmly."
+  },
+  {
+    "t": "3:16",
+    "f": "3:16.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130544_6bca0709-1b00-48fb-b56b-2a9f97b5ec09.png",
+    "d": "A man pointing a finger up with emphasis beside a big wobbly exclamation mark."
+  },
+  {
+    "t": "3:18",
+    "f": "3:18.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130546_3cb09919-2cd4-4882-9121-0c12a8873b41.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"10%\" beside a small upward line chart."
+  },
+  {
+    "t": "3:23",
+    "f": "3:23.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130548_5119b240-8dc3-4dc9-96ee-a398e94034ae.png",
+    "d": "A man pointing at wobbly hand-drawn text \"INDEX FUND\" beside a basket holding many tiny coins."
+  },
+  {
+    "t": "3:27",
+    "f": "3:27.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130550_ce645d63-736d-49b3-8c41-ca5869b24d62.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"S&P 500\"."
+  },
+  {
+    "t": "3:29",
+    "f": "3:29.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130552_df679a73-7bad-4cfd-8561-33404b435720.png",
+    "d": "A man beside two coins turning into four coins with an arrow, and wobbly text \"7 YRS\"."
+  },
+  {
+    "t": "3:34",
+    "f": "3:34.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130554_7d70fe84-0a14-4fb2-a274-fb5c43f9f3f4.png",
+    "d": "A man pointing at a big steep curve swooping upward to the top right."
+  },
+  {
+    "t": "3:39",
+    "f": "3:39.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130556_c913da0c-c224-44aa-9580-2bdf1fb4032a.png",
+    "d": "A man beside a single tiny coin with a big arrow leading to a huge pile of money, labeled wobbly text \"20 to 60\"."
+  },
+  {
+    "t": "3:44",
+    "f": "3:44.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130610_8553b20d-5b1a-42db-9c9b-0b74ec349ce7.png",
+    "d": "A man pointing at a thick stack of many calendar pages with wobbly text \"DECADES\"."
+  },
+  {
+    "t": "3:47",
+    "f": "3:47.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130612_0a3f2b6d-0aa9-40a6-b4c7-729d95785cd0.png",
+    "d": "A man pointing at a chalkboard with a wobbly equation and a small flame drawn on it."
+  },
+  {
+    "t": "3:51",
+    "f": "3:51.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130614_725985ac-90ae-480b-93ed-286bc3c55d4f.png",
+    "d": "A man beside a balance scale where a big clock outweighs a small money bag on the other side."
+  },
+  {
+    "t": "3:57",
+    "f": "3:57.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130616_eb274c50-185f-420e-898d-63cf81a6f4f0.png",
+    "d": "A man holding a calculator with a big wobbly question mark above his head."
+  },
+  {
+    "t": "4:00",
+    "f": "4:00.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130618_d2cdd193-0174-4443-b611-79c2b2937552.png",
+    "d": "A man holding up two fingers beside a big wobbly hand-drawn number \"2\"."
+  },
+  {
+    "t": "4:02",
+    "f": "4:02.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130620_4e7acaed-9005-4150-91c0-510569b5e2e8.png",
+    "d": "A man pointing at wobbly text \"#1\" beside a bullseye target."
+  },
+  {
+    "t": "4:06",
+    "f": "4:06.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130622_a4fe1f22-475f-4076-ad35-ea947846d284.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"EXPENSES x25\"."
+  },
+  {
+    "t": "4:13",
+    "f": "4:13.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130623_f018c0a2-be3b-4e34-9da0-041f51628dbc.png",
+    "d": "A man pointing at wobbly text \"#2\" beside a calendar and a clock."
+  },
+  {
+    "t": "4:18",
+    "f": "4:18.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130639_29fbc6c4-5748-410b-97fd-59346279a18c.png",
+    "d": "A man pointing at a big arrow curving backward to the left, with wobbly text \"10%\"."
+  },
+  {
+    "t": "4:23",
+    "f": "4:23.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130642_e4d8f366-f8c7-46a7-ae2e-bbc58c43a314.png",
+    "d": "A man pointing at wobbly text \"TODAY = ?\" with an arrow leading to a bullseye goal target."
+  },
+  {
+    "t": "4:30",
+    "f": "4:30.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130644_212f1987-19f5-4bc9-adf4-c3c6d0ce82a2.png",
+    "d": "A man beside a tiny dot at the start of a very long line stretching to a far away target."
+  },
+  {
+    "t": "4:35",
+    "f": "4:35.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130646_1260403c-06f7-4804-803a-138383d5614a.png",
+    "d": "A man smiling and admiring something with little sparkle marks around his head."
+  },
+  {
+    "t": "4:37",
+    "f": "4:37.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130648_fb19435e-84a7-4c27-9507-4053af50fa48.png",
+    "d": "A man rolling up his sleeves with a determined face, small numbers floating around him."
+  },
+  {
+    "t": "4:43",
+    "f": "4:43.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130650_b99988c7-e2e1-4319-ad4a-5298b5ef83fc.png",
+    "d": "A man pointing at a big wobbly number \"3\" above three empty square boxes."
+  },
+  {
+    "t": "4:46",
+    "f": "4:46.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130652_c76bd022-0fde-46a5-8c16-4d02289ce286.png",
+    "d": "A man pointing at wobbly text \"SCENARIO 1\" above \"AGE 30\"."
+  },
+  {
+    "t": "4:49",
+    "f": "4:49.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130653_2536cffd-fe4b-42f2-a341-5f3bfa71eb44.png",
+    "d": "A man sprinting fast leaning forward with motion lines trailing behind him."
+  },
+  {
+    "t": "4:55",
+    "f": "4:55.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130709_814a51c2-a1be-4abe-904e-aa07d747f6e5.png",
+    "d": "A man pointing at wobbly text \"AGE 20\" and \"10 YRS\"."
+  },
+  {
+    "t": "5:01",
+    "f": "5:01.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130711_56007a95-6e53-4dad-a4b4-8207b572630f.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"30 to 65 = 35 YRS\"."
+  },
+  {
+    "t": "5:10",
+    "f": "5:10.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130713_15a9f5e2-ba83-4c44-b0be-341f4eac98a6.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$175 / MONTH\"."
+  },
+  {
+    "t": "5:20",
+    "f": "5:20.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130715_c9119b1f-b34d-4fe6-9bf4-c695a3327e0c.png",
+    "d": "A man shrugging casually with both palms up and a simple little smile."
+  },
+  {
+    "t": "5:22",
+    "f": "5:22.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130720_70277009-5d4a-4b58-bea6-c0cc092c31db.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$20,000\" with a small coin stack."
+  },
+  {
+    "t": "5:31",
+    "f": "5:31.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130720_79a5c781-f374-4007-a2ab-89329701895a.png",
+    "d": "A man beside wobbly text \"$20K\" with an arrow to a big balloon labeled \"$1,000,000\"."
+  },
+  {
+    "t": "5:41",
+    "f": "5:41.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130722_e2df3db9-ae38-4621-bd90-2859e3d08234.png",
+    "d": "A man with a curious face pointing at wobbly text \"$2M?\" with a big question mark."
+  },
+  {
+    "t": "5:44",
+    "f": "5:44.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130723_a0a0fc8e-99c5-4b61-bb21-2f8bf64cd7f1.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$350 / MONTH\"."
+  },
+  {
+    "t": "5:50",
+    "f": "5:50.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130739_b367e0e4-1d74-4da1-a225-4337b1c98fde.png",
+    "d": "A man lounging back with hands behind head while a money bag with little gears works beside him."
+  },
+  {
+    "t": "5:56",
+    "f": "5:56.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130742_fcd4a630-7dab-489a-9931-a3413a735f43.png",
+    "d": "A man pointing at wobbly text \"AGE 20\" next to a big round clock."
+  },
+  {
+    "t": "6:07",
+    "f": "6:07.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130743_af27e45b-faec-4032-8fbc-aecdfa3c4383.png",
+    "d": "A man pointing at wobbly text \"SCENARIO 2\" above \"AGE 40\"."
+  },
+  {
+    "t": "6:10",
+    "f": "6:10.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130745_3c5f58dc-10f9-46b8-8ce4-bf35aae4bd20.png",
+    "d": "A man pointing directly at the viewer with wobbly text \"REALISTIC\" beside him."
+  },
+  {
+    "t": "6:15",
+    "f": "6:15.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130748_af4ba390-c6cb-4afc-9abe-ffae38092830.png",
+    "d": "A man standing on a winding road path with wobbly text \"AGE 30\" above him."
+  },
+  {
+    "t": "6:20",
+    "f": "6:20.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130749_b0114b5a-9055-4b7d-ade2-22b156c59118.png",
+    "d": "A man beside wobbly text \"10 YR WINDOW\" and a big closed padlock."
+  },
+  {
+    "t": "6:30",
+    "f": "6:30.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130751_47a0084d-5989-42c1-b7d3-48d14b8f6c3a.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$450 / MONTH\"."
+  },
+  {
+    "t": "6:37",
+    "f": "6:37.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130753_3f99f232-2d00-4e3a-9c5e-b877f6cff934.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$90,000\" with a coin stack."
+  },
+  {
+    "t": "6:43",
+    "f": "6:43.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130809_9ef8742b-cab3-46b5-85fd-9360779fc15f.png",
+    "d": "A man pointing at wobbly text \"40 to 65\" with an arrow to \"$1M\"."
+  },
+  {
+    "t": "6:52",
+    "f": "6:52.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130811_be61f722-5a37-46cc-b197-07cde3137442.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$900 / MONTH\"."
+  },
+  {
+    "t": "7:00",
+    "f": "7:00.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130812_932b204d-f133-4181-bfb5-c067f792e617.png",
+    "d": "A man beside wobbly text \"$182K\" with an arrow to \"$2M\"."
+  },
+  {
+    "t": "7:11",
+    "f": "7:11.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130815_de9d0977-e0ef-4bec-bcee-fed6c98bdce3.png",
+    "d": "A man pointing at two boxes labeled wobbly text \"401k\" and \"ROTH IRA\" with a plus sign between them."
+  },
+  {
+    "t": "7:22",
+    "f": "7:22.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130816_9449e3ce-4a9c-496b-9b05-97b9bac16ae8.png",
+    "d": "A man dropping coins into two labeled jars side by side."
+  },
+  {
+    "t": "7:29",
+    "f": "7:29.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130819_c699a47e-c8d9-4482-ba67-6db6d6e609aa.png",
+    "d": "A man pointing at wobbly text \"SCENARIO 3\" above \"AGE 50\"."
+  },
+  {
+    "t": "7:33",
+    "f": "7:33.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130821_f90f9107-2b19-4cad-b704-5365df30c5d2.png",
+    "d": "A man looking worried with a single sweat drop and wobbly text \"BEHIND\" beside him."
+  },
+  {
+    "t": "7:37",
+    "f": "7:37.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130822_3702a316-db57-4c12-8ac7-00d58f220ba9.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"35 to 50 = 15 YRS\"."
+  },
+  {
+    "t": "7:48",
+    "f": "7:48.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130839_e95df744-4b94-4f3c-a48a-679a05b3ab10.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$578 / MONTH\"."
+  },
+  {
+    "t": "7:56",
+    "f": "7:56.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130841_c0598166-8ff2-4249-aa61-791091965095.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"MAX ROTH IRA\"."
+  },
+  {
+    "t": "8:00",
+    "f": "8:00.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130843_77eb1251-e429-48b8-8b00-f5f4e18e0af9.png",
+    "d": "A man beside wobbly text \"$500K\" with an arrow to \"$1M\"."
+  },
+  {
+    "t": "8:10",
+    "f": "8:10.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130845_0a2dc272-d7a2-4310-bcef-f50e7b2c2c55.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$1,155 / MONTH\"."
+  },
+  {
+    "t": "8:21",
+    "f": "8:21.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130846_4dbf691e-c0b0-4266-b8d9-aac3ec285d4d.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"$500,000\" with a coin stack."
+  },
+  {
+    "t": "8:26",
+    "f": "8:26.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130848_a1adb981-f8a4-4fd9-84c8-2310e8375901.png",
+    "d": "A man pointing at a big upward arrow leading to huge wobbly text \"$2M\"."
+  },
+  {
+    "t": "8:33",
+    "f": "8:33.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130851_604c5487-c0dd-4687-bdff-8f1b8b1d1efe.png",
+    "d": "A man sitting at a small desk with gears turning and coins flowing automatically into a jar."
+  },
+  {
+    "t": "8:46",
+    "f": "8:46.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130853_2b89060f-d6f8-4067-96c3-5c5d52093870.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"10%\" with a small percent sign."
+  },
+  {
+    "t": "8:52",
+    "f": "8:52.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130908_4b2f95c8-a82c-4ca8-893b-53d48ed60f94.png",
+    "d": "A man with one hand raised palm out objecting, with a small speech bubble."
+  },
+  {
+    "t": "8:57",
+    "f": "8:57.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130910_83631e43-a791-4670-96dc-bfe76a103d96.png",
+    "d": "A man nodding with a small smile and a big checkmark beside his head."
+  },
+  {
+    "t": "8:58",
+    "f": "8:58.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130912_d8d921ba-97a0-4c78-9bf1-47b6a1f611cd.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"7% / 8%\"."
+  },
+  {
+    "t": "9:04",
+    "f": "9:04.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130913_9e807b90-f7f4-4d09-ab2d-65945794a8da.png",
+    "d": "A man pointing at wobbly text \"8%\" beside \"$/MO\" with an upward arrow."
+  },
+  {
+    "t": "9:13",
+    "f": "9:13.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130916_e8d9e2af-694e-4040-bd5a-f3158711d24b.png",
+    "d": "A man pointing at a chalkboard with a wobbly equation and a big checkmark."
+  },
+  {
+    "t": "9:15",
+    "f": "9:15.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130918_61192845-454e-4e24-8bf6-c8a836f66d76.png",
+    "d": "A man turning a big dial knob with sliders beside him."
+  },
+  {
+    "t": "9:18",
+    "f": "9:18.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130919_5531a31a-eaa1-4ba8-920f-ae45061c0c44.png",
+    "d": "A man with one hand on his chin thinking, with a small thought bubble."
+  },
+  {
+    "t": "9:25",
+    "f": "9:25.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130921_a495b0c2-ef5f-4d8d-9bf5-09e7a5236244.png",
+    "d": "A man beside a briefcase with a big wobbly question mark above it."
+  },
+  {
+    "t": "9:29",
+    "f": "9:29.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130939_49f0d15b-8feb-4ade-9f98-1e58214b97db.png",
+    "d": "A man doing a flexible stretch bending sideways, loose and relaxed."
+  },
+  {
+    "t": "9:33",
+    "f": "9:33.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130940_ccd3e805-e76c-4ef0-808a-743fe70879aa.png",
+    "d": "A man with a big happy smile, a dark storm cloud crossed out behind him."
+  },
+  {
+    "t": "9:39",
+    "f": "9:39.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130942_c2038a28-ecde-455d-9a9f-558392e80a41.png",
+    "d": "A man pointing at a round clock with a line splitting it in half, part-time."
+  },
+  {
+    "t": "9:45",
+    "f": "9:45.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130944_dcc453e0-7819-47c1-a7ca-90850296ac77.png",
+    "d": "A man holding a steaming coffee cup, wearing a simple apron, barista style."
+  },
+  {
+    "t": "9:58",
+    "f": "9:58.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130946_8d163bac-75a2-4dda-9660-958503121b92.png",
+    "d": "A man standing in front of three different doors, considering options."
+  },
+  {
+    "t": "10:01",
+    "f": "10:01.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130948_a5b7dae4-74be-4754-86db-2461bc2247e1.png",
+    "d": "A man with arms spread wide feeling free as a heavy weight floats up off his shoulders."
+  },
+  {
+    "t": "10:12",
+    "f": "10:12.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130950_3b6a640c-4545-4042-bbd6-91f33ae9af57.png",
+    "d": "A man pointing at two labeled file folders standing upright."
+  },
+  {
+    "t": "10:19",
+    "f": "10:19.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_130952_bdfae3fb-2288-470c-8b35-6af74f537c03.png",
+    "d": "A man holding a shield with wobbly text \"401k / ROTH IRA\" on it."
+  },
+  {
+    "t": "10:32",
+    "f": "10:32.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131010_7568c3fc-ed40-4844-a58b-28e402b9a6c5.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"ROTH IRA = TAX FREE\"."
+  },
+  {
+    "t": "10:40",
+    "f": "10:40.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131013_21f1c0af-7814-49eb-bc33-4fa4d20a0b06.png",
+    "d": "A man pointing at wobbly text \"BEFORE 59 1/2\" beside a small bank building box."
+  },
+  {
+    "t": "10:54",
+    "f": "10:54.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131014_30e5d33f-c438-4e36-b83c-018973cb09f5.png",
+    "d": "The bearded man in a grey blazer shaking hands across a small desk with a second simple stick figure financial planner."
+  },
+  {
+    "t": "11:06",
+    "f": "11:06.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131016_19566bbd-476a-4516-9b5e-14c6f9241410.png",
+    "d": "A man pointing at a big empty picture frame on a stand."
+  },
+  {
+    "t": "11:10",
+    "f": "11:10.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131018_1e0c3f97-e6fc-415e-a29a-e47a33fc15aa.png",
+    "d": "A man tiredly shoveling coins into a deep hole, with a sweat drop on his head."
+  },
+  {
+    "t": "11:21",
+    "f": "11:21.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131020_8dff96dc-1b28-44d7-9d05-11b6a02eda9d.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"TRADITIONAL\"."
+  },
+  {
+    "t": "11:26",
+    "f": "11:26.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131022_b8a00b3b-10ba-4914-8630-848be4db414b.png",
+    "d": "A man doing a handstand upside down, flipped over."
+  },
+  {
+    "t": "11:28",
+    "f": "11:28.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131023_5509bcc1-ccfd-44c5-afb9-d4e7da330306.png",
+    "d": "A man pointing at a long horizontal timeline with one short shaded highlighted section near the start."
+  },
+  {
+    "t": "11:33",
+    "f": "11:33.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131039_ca53abfb-7767-45c4-8df2-ee329655c965.png",
+    "d": "A man riding on top of a big upward arrow like a rocket, gliding forward."
+  },
+  {
+    "t": "11:41",
+    "f": "11:41.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131042_b24bcb53-5f48-4c98-aba1-af98abce63ef.png",
+    "d": "A man floating peacefully in the air with eyes closed and a calm smile, little floaty marks around him."
+  },
+  {
+    "t": "11:50",
+    "f": "11:50.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131043_2ff574c6-20ea-452d-8a4d-c1ce90bb93f5.png",
+    "d": "A man thinking with several little gears floating above his head."
+  },
+  {
+    "t": "11:53",
+    "f": "11:53.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131045_05e89c6c-f8e0-4670-9bd1-0f4da8609f9d.png",
+    "d": "A man running toward a checkered finish line flag."
+  },
+  {
+    "t": "11:59",
+    "f": "11:59.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131047_b2cd9676-01b8-4e16-b74a-14bcc40ff007.png",
+    "d": "A man breaking through a finish line ribbon with arms up, celebrating."
+  },
+  {
+    "t": "12:03",
+    "f": "12:03.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131049_b1af624b-1962-4f7d-bc0c-605816d5fee0.png",
+    "d": "A man standing at a forked crossroads with two arrow signs pointing different ways."
+  },
+  {
+    "t": "12:06",
+    "f": "12:06.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131051_e269ba38-e9e2-498a-b46b-b4c8bf262ae8.png",
+    "d": "A man relaxing in a beach lounge chair under a small umbrella."
+  },
+  {
+    "t": "12:10",
+    "f": "12:10.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131053_6307f7b7-61dc-4e89-abed-f41c7529c798.png",
+    "d": "A man holding a big heart shape with two tiny people figures beside him."
+  },
+  {
+    "t": "12:17",
+    "f": "12:17.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131109_0cba57e0-4840-4e44-83fc-f083ddde8a98.png",
+    "d": "A man standing relaxed in front while a tall growing pile of coins rises behind him."
+  },
+  {
+    "t": "12:23",
+    "f": "12:23.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131111_148283d6-3d74-4678-be9c-1e66d4f73182.png",
+    "d": "A man beside several branching arrows splitting off in different directions."
+  },
+  {
+    "t": "12:26",
+    "f": "12:26.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131112_a23d2487-b521-43b7-95b6-b2d53c27cb59.png",
+    "d": "A man looking at a half-circle gauge meter with a needle, a question mark above his head."
+  },
+  {
+    "t": "12:32",
+    "f": "12:32.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131115_b08385d3-82f3-4721-994d-50ece583a0ca.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"20s: $175/MO\"."
+  },
+  {
+    "t": "12:39",
+    "f": "12:39.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131117_0dd17ad3-10d9-4046-85e8-02907f6a543b.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"30s: $450-$900/MO\"."
+  },
+  {
+    "t": "12:47",
+    "f": "12:47.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131118_2f2def69-a384-415a-9691-e7e7977608af.png",
+    "d": "A man pointing at huge wobbly hand-drawn text \"LATE 30s: $578-$1,200/MO\"."
+  },
+  {
+    "t": "12:58",
+    "f": "12:58.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131120_0299f1e4-0dc7-4946-9206-d0215cd41a7e.png",
+    "d": "A man beside wobbly text \"EXTREME INCOME\" crossed out with a big black X."
+  },
+  {
+    "t": "13:01",
+    "f": "13:01.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131122_a0ff3808-672a-402b-b07e-0d809d38beb9.png",
+    "d": "A man pointing at a calendar grid filled with several little checkmarks."
+  },
+  {
+    "t": "13:06",
+    "f": "13:06.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131137_25184c01-88cc-4c4c-a298-a56a1b09dd23.png",
+    "d": "A man pointing down at a rectangular comment box below him."
+  },
+  {
+    "t": "13:13",
+    "f": "13:13.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131139_e747e010-d900-4fd4-b1c3-40eee738426a.png",
+    "d": "A man gesturing toward a small group of tiny stick-figure people beside him."
+  },
+  {
+    "t": "13:18",
+    "f": "13:18.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131141_e3b5edc4-8da4-47f3-8e35-0df1f02e1748.png",
+    "d": "A man pointing at a big thumbs-up like button beside him."
+  },
+  {
+    "t": "13:25",
+    "f": "13:25.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131142_f864c145-e04b-4ab4-b869-eb30d9ea8acc.png",
+    "d": "A man pointing at a big rectangular button with wobbly text \"SUBSCRIBE\"."
+  },
+  {
+    "t": "13:33",
+    "f": "13:33.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131144_77842a87-e705-41dd-9e70-8cb5181b9519.png",
+    "d": "A man holding a clipboard with a checklist of several ticked items."
+  },
+  {
+    "t": "13:40",
+    "f": "13:40.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131146_ddb92e74-fb71-4d98-a5e0-82db65b68d60.png",
+    "d": "A man holding a wrench beside a small flame, fixing a fire plan."
+  },
+  {
+    "t": "13:44",
+    "f": "13:44.png",
+    "u": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260613_131148_9f7a282c-627d-498c-8258-5cac74e88f55.png",
+    "d": "A man waving goodbye with one raised hand and a big friendly smile."
+  }
+];
+const grid = document.getElementById('grid');
+for (const it of ITEMS){
+  const c=document.createElement('div'); c.className='card';
+  c.innerHTML='<img loading="lazy" src="'+it.u+'"><div class="ts">'+it.t+'</div><div class="ds">'+(it.d||'')+'</div>'+
+    '<a class="save" href="'+it.u+'" download="'+it.f+'" target="_blank" rel="noopener">save this one</a>';
+  grid.appendChild(c);
+}
+function sanitize(name){ try{ // ":" is illegal on Windows; fall back to "-"
+    const a=document.createElement('a'); a.download=name; return name; }catch(e){return name.replace(/:/g,'-');}
+}
+document.getElementById('dl').addEventListener('click', async ()=>{
+  const btn=document.getElementById('dl'); const st=document.getElementById('status');
+  btn.disabled=true; let ok=0, fail=0;
+  for (let i=0;i<ITEMS.length;i++){
+    const it=ITEMS[i]; st.textContent='Saving '+(i+1)+' of '+ITEMS.length+' ('+it.t+')…';
+    try{
+      const r=await fetch(it.u); if(!r.ok) throw new Error(r.status);
+      const b=await r.blob(); const url=URL.createObjectURL(b);
+      const a=document.createElement('a'); a.href=url; a.download=it.f.replace(/:/g,'-'); // safe filename
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),4000); ok++;
+    }catch(e){ fail++; }
+    await new Promise(r=>setTimeout(r,250));
+  }
+  st.textContent='Done — saved '+ok+', failed '+fail+'. Check your Downloads folder. If many failed, use the "save this one" links instead.';
+  btn.disabled=false;
+});
+</script>
+</body>
+</html>
