@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coast FI — Image Downloads (named by timestamp)</title>
+<style>
+  :root { --bg:#0f1115; --card:#1a1d24; --line:#2a2f3a; --txt:#e7e9ee; --accent:#4f8cff; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--txt); }
+  header { position:sticky; top:0; z-index:10; background:#12141a; border-bottom:1px solid var(--line); padding:16px 20px; }
+  h1 { margin:0 0 6px; font-size:18px; }
+  p.sub { margin:0; font-size:13px; color:#9aa3b2; }
+  .bar { margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  button { background:var(--accent); color:#fff; border:0; padding:10px 16px; border-radius:8px; font-size:14px; cursor:pointer; }
+  button.secondary { background:#2a2f3a; }
+  button:disabled { opacity:.5; cursor:default; }
+  #status { font-size:13px; color:#9aa3b2; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; padding:20px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden; display:flex; flex-direction:column; }
+  .card img { width:100%; aspect-ratio:16/9; object-fit:contain; background:#fff; }
+  .meta { padding:10px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .ts { font-weight:700; font-size:15px; }
+  .meta a, .meta button { font-size:12px; padding:6px 10px; border-radius:6px; text-decoration:none; }
+  a.dl { background:#2a2f3a; color:#fff; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Coast FI — full storyboard (165 images)</h1>
+  <p class="sub">Each file is named after the script timestamp it corresponds to (e.g. <code>0:00.png</code>). Click <b>Download all</b>, or grab any single image.</p>
+  <div class="bar">
+    <button id="dlAll">⬇ Download all (165)</button>
+    <button id="stop" class="secondary" disabled>Stop</button>
+    <span id="status">Ready.</span>
+  </div>
+  <p class="sub" style="margin-top:8px">Note: Windows/macOS don't allow “:” in filenames, so your browser may save <code>0:00.png</code> as <code>0_00.png</code>. The order is still correct.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const BASE = "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/";
+// [timestamp, filename]
+const IMAGES = [
+ ["0:00","hf_20260615_114443_ddf71509-49ba-4533-b5c6-9d1dfe01fbbe.png"],
+ ["0:03","hf_20260615_114446_be8b552b-e084-41ad-b7e9-6f70fff7d242.png"],
+ ["0:06","hf_20260615_114449_be093a57-9de3-4f33-b044-3971e6a39fd9.png"],
+ ["0:09","hf_20260615_114452_564992f0-df38-456f-a840-bd3b887c4de2.png"],
+ ["0:11","hf_20260615_114454_395e6d31-8753-4dca-884c-adf113f909b6.png"],
+ ["0:13","hf_20260615_114457_e56d8282-c710-48c5-8888-b517c4a151ef.png"],
+ ["0:17","hf_20260615_114640_8fe6615d-d535-4c83-9574-894769118144.png"],
+ ["0:26","hf_20260615_114643_eb36db38-c4a9-4393-bbae-428d4f534263.png"],
+ ["0:36","hf_20260615_114646_c320cd91-d0ce-4183-8263-5c1f2a9c3996.png"],
+ ["0:43","hf_20260615_114649_807243f3-29ea-4d36-a0e2-d342308c8f90.png"],
+ ["0:49","hf_20260615_114651_40d040d2-a197-4855-a9e1-77d4c7572ded.png"],
+ ["0:53","hf_20260615_114654_28e650e1-ec5b-4193-a42e-49685cd7d111.png"],
+ ["0:56","hf_20260615_114657_c3aa19b6-0f18-4c88-9be3-8b8cb256e54d.png"],
+ ["1:01","hf_20260615_114659_e6aea599-7e79-4353-8400-1c409002149e.png"],
+ ["1:05","hf_20260615_114920_1ba38622-120f-4449-92c3-8db5c121286d.png"],
+ ["1:06","hf_20260615_114923_3be2f438-7099-450a-943c-d7706113ccf9.png"],
+ ["1:09","hf_20260615_114925_32246662-3b9d-4a34-a10c-fa1831c2425c.png"],
+ ["1:11","hf_20260615_114928_8137a413-3453-4dfd-a94b-fed36547e71d.png"],
+ ["1:14","hf_20260615_114930_53f130ee-fbbd-4e65-8ddb-1d95f7337ecf.png"],
+ ["1:19","hf_20260615_114933_3cc85fc8-acbb-46e9-80bc-5bf58f55cdf5.png"],
+ ["1:23","hf_20260615_114935_cfe69921-35d7-4192-bbb1-fb5dd2f82581.png"],
+ ["1:26","hf_20260615_114938_a14cfca1-8bc8-4ae7-b446-201fdb32beee.png"],
+ ["1:32","hf_20260615_115354_90e52a23-4caa-4220-b0ac-b4e1e48f5dd0.png"],
+ ["1:36","hf_20260615_115357_bda5e94c-26a2-4b4a-b1c0-4597c8a05392.png"],
+ ["1:37","hf_20260615_115359_e480206f-deae-437e-9b94-078435b9e27b.png"],
+ ["1:38","hf_20260615_115402_b67dbe3e-9e2d-4d8a-8f71-a37cb7a5bc4b.png"],
+ ["1:39","hf_20260615_115404_860ac1e9-9217-4806-9f8b-943058286fd0.png"],
+ ["1:50","hf_20260615_115407_15177ad8-ac6c-445c-90e6-f6dd3aa85887.png"],
+ ["1:52","hf_20260615_115410_f4c91c9e-d28f-4b70-9370-982f0af84086.png"],
+ ["1:55","hf_20260615_115412_60e629e6-4d8d-48e8-a997-618f0e9f17c3.png"],
+ ["2:05","hf_20260615_115440_c4fa553e-b86c-4322-a532-0c822631c050.png"],
+ ["2:11","hf_20260615_115443_3813a569-0ae7-4c76-81e2-7c653c3dc641.png"],
+ ["2:17","hf_20260615_115445_cdfed6df-c602-4644-9a93-3e0d70a94a39.png"],
+ ["2:19","hf_20260615_115448_a828ce4b-b128-4ce1-b5bc-e1cf22480217.png"],
+ ["2:25","hf_20260615_115450_148ae272-c9cc-45e1-9801-4b81992cc3a5.png"],
+ ["2:29","hf_20260615_115452_1f9a90f0-1244-4804-8756-e77dc64c5246.png"],
+ ["2:33","hf_20260615_115455_0b9eae99-abf3-496d-be88-2322cd315c32.png"],
+ ["2:36","hf_20260615_115458_b4259ff3-2b9e-4f48-b91f-8e95a2e1d5ea.png"],
+ ["2:40","hf_20260615_115530_c79a82a5-aba6-4de3-9154-627357946c06.png"],
+ ["2:44","hf_20260615_115532_446e20d6-0a32-4a07-a787-b35c3f199848.png"],
+ ["2:52","hf_20260615_115535_03ef73b7-6f35-48f3-af68-521bc5b83300.png"],
+ ["2:59","hf_20260615_115537_5f2d917f-7ca1-4302-9862-5abf485a36b5.png"],
+ ["3:07","hf_20260615_115541_ecc4359c-ff47-4a7b-9a75-25f813cf8412.png"],
+ ["3:13","hf_20260615_115543_97b739e7-6b26-4d97-a238-59217ebe0142.png"],
+ ["3:16","hf_20260615_115545_e1c05eef-fa22-47ba-b483-52233d5e62c5.png"],
+ ["3:18","hf_20260615_115548_8e5b6f9d-c1d4-439e-9099-9ec59484f122.png"],
+ ["3:26","hf_20260615_115615_69b24b6d-55be-4cad-b008-d449450bb816.png"],
+ ["3:31","hf_20260615_115617_7d350202-6241-4692-8c6e-f2ad7c4fcb2e.png"],
+ ["3:33","hf_20260615_115620_75903249-5f1d-4520-9630-6cef4dcfb3bd.png"],
+ ["3:40","hf_20260615_115622_4ac118b7-533e-43b8-827f-bba194c98f68.png"],
+ ["3:46","hf_20260615_115625_8c638ec1-00a4-4f15-83f0-a551eba31585.png"],
+ ["3:48","hf_20260615_115627_7ee9d5fa-41f5-456e-b09c-53048680dccb.png"],
+ ["3:53","hf_20260615_115630_9963ad12-8889-4d83-b1b6-0b45652ffb65.png"],
+ ["3:59","hf_20260615_115632_65c0f9bc-95e8-45f7-8a7f-beee9cac0454.png"],
+ ["4:03","hf_20260615_115703_efa51de6-5c3b-4f54-ad0a-6cd739227584.png"],
+ ["4:11","hf_20260615_115705_212486d3-8817-4d36-b45c-861bd1a1a591.png"],
+ ["4:13","hf_20260615_115708_c7cdf646-cf72-4d99-b566-3877e4f6c2aa.png"],
+ ["4:18","hf_20260615_115711_cbaea931-2a2d-4a2f-9b46-6c66cae70ea5.png"],
+ ["4:26","hf_20260615_115715_5e7fdc52-6adc-4ac1-b23d-ee41d87c0778.png"],
+ ["4:35","hf_20260615_115716_564ecd20-e743-4fab-9b41-7039b811aaf3.png"],
+ ["4:36","hf_20260615_115717_b2e52eae-9851-4eae-9daf-262fff00fad3.png"],
+ ["4:40","hf_20260615_115720_aa5b0043-a3e1-4912-a026-1e0db8c58e31.png"],
+ ["4:45","hf_20260615_115751_257393a6-e593-4dfe-b070-ba7748050455.png"],
+ ["4:50","hf_20260615_115753_1f10788b-2583-4158-b2de-028d3561d55a.png"],
+ ["4:53","hf_20260615_115755_a0ca3716-f598-44a1-a7c9-b91ed866a40c.png"],
+ ["5:02","hf_20260615_115758_34696a37-a002-4d60-8bd4-ee146cfdc96e.png"],
+ ["5:05","hf_20260615_115800_9c9f7553-c6b8-44a3-9e6e-c6f444d6d698.png"],
+ ["5:08","hf_20260615_115804_e58a8a66-f44a-40cd-aeba-f9259aa5b6d6.png"],
+ ["5:13","hf_20260615_115805_5a5f6df0-34e4-416f-9c61-767f7d01bad2.png"],
+ ["5:15","hf_20260615_115807_dddd9bef-11be-47fb-b4ea-c47c856d3f57.png"],
+ ["5:21","hf_20260615_115835_bd70b9de-f9f6-4d4a-9972-09cacd507787.png"],
+ ["5:27","hf_20260615_115837_e99e218e-9bff-44bd-91e4-9a2d14e2fa3a.png"],
+ ["5:34","hf_20260615_115839_cefb91c2-5acc-40c7-ad6d-744b81f30f15.png"],
+ ["5:40","hf_20260615_115842_4b84f575-3110-448c-83c3-c4f638f0f52b.png"],
+ ["5:45","hf_20260615_115845_2586cd9d-b81a-4d4e-b037-a0a772ac6e52.png"],
+ ["5:48","hf_20260615_115847_18065ad6-d50b-478f-b271-e81b35570363.png"],
+ ["5:54","hf_20260615_115849_408e804a-bedf-4aa2-af11-10fed8b4babd.png"],
+ ["6:00","hf_20260615_115852_0e88e290-e257-4164-be9e-4af6c034a5a2.png"],
+ ["6:14","hf_20260615_115918_80bf38c0-9d38-4bf7-acba-a9bf96b6c185.png"],
+ ["6:16","hf_20260615_115921_88628bfb-4273-4c9d-984b-3f2702ab021f.png"],
+ ["6:18","hf_20260615_115923_6fad5c2f-646b-485b-8578-1cd4122912f9.png"],
+ ["6:19","hf_20260615_115925_b354c4d7-431f-4dcd-afeb-43657f4c73b5.png"],
+ ["6:21","hf_20260615_115928_de17f004-3dd5-4baa-891f-c30d3b8ecf49.png"],
+ ["6:26","hf_20260615_115930_d213dcf7-ca3c-4c02-853f-80a9c767be32.png"],
+ ["6:35","hf_20260615_115932_9a578c8f-c4bc-49a3-8b30-a0836ef56356.png"],
+ ["6:39","hf_20260615_115935_6d865ca0-d5f2-48ed-9565-041a7d2b9c30.png"],
+ ["6:42","hf_20260615_120002_4a9aedce-12ba-4c6e-9a59-a70b5c723ff1.png"],
+ ["6:46","hf_20260615_120005_9f64c60f-2f11-4084-b8e3-65bcbf3ed08e.png"],
+ ["6:50","hf_20260615_120007_c33b9f9a-fb32-418b-8066-efea0d391b6b.png"],
+ ["6:57","hf_20260615_120009_f419d673-f96e-4ac3-be62-2899b3e7fd91.png"],
+ ["7:02","hf_20260615_120013_9bacee0d-3af9-4e91-9c6e-132e63ed772f.png"],
+ ["7:10","hf_20260615_120014_bd6e6f9b-2982-49a5-80c0-bdaa04f1169b.png"],
+ ["7:14","hf_20260615_120017_983f081e-5147-4618-8ae0-71b8980318ff.png"],
+ ["7:24","hf_20260615_120019_c10f849f-895b-4c34-a257-0b99869c257d.png"],
+ ["7:28","hf_20260615_120049_1270055d-558e-4b1d-bd68-3a1dbdd670e2.png"],
+ ["7:35","hf_20260615_120051_652d6219-ff21-40e9-bbde-662ca94be9c1.png"],
+ ["7:38","hf_20260615_120053_d9d75907-caf1-4841-988e-2b645128773a.png"],
+ ["7:41","hf_20260615_120056_ed1ac123-4998-4f33-be6d-f4c9db9efd47.png"],
+ ["7:51","hf_20260615_120058_65235716-159b-4b5d-8e16-aa1c2a7ce747.png"],
+ ["7:53","hf_20260615_120101_9532758a-1aba-4f4f-87c4-f26fce080ef8.png"],
+ ["8:00","hf_20260615_120103_9e91924d-2fa7-4220-a622-62c91f25a8f3.png"],
+ ["8:04","hf_20260615_120105_9f6b1280-1142-4119-8989-7ea0a69a1a11.png"],
+ ["8:09","hf_20260615_120134_9db9429c-8653-4386-9093-8fa617f184c6.png"],
+ ["8:18","hf_20260615_120137_535e774a-6ab1-43a7-9399-88a9fa505d0d.png"],
+ ["8:24","hf_20260615_120139_47bdb31e-bedd-45a9-926d-93f490414f58.png"],
+ ["8:29","hf_20260615_120141_327c2646-656c-46ed-b079-3dd3cc304485.png"],
+ ["8:32","hf_20260615_120143_529d75bf-ce2a-444b-a451-34c62e67210b.png"],
+ ["8:45","hf_20260615_120145_e35758cc-10b2-4a61-9cb4-96ff8ecb8f09.png"],
+ ["8:54","hf_20260615_120148_b0951d66-231b-4449-abd5-a84e70a77f6c.png"],
+ ["8:57","hf_20260615_120151_349910fa-a0a9-4cde-99a2-103cf46af97c.png"],
+ ["9:01","hf_20260615_120221_b527b3d5-4846-4190-8f1e-83b6e92958bf.png"],
+ ["9:03","hf_20260615_120223_c637ad3c-0196-4203-a0fa-f73dd0435268.png"],
+ ["9:05","hf_20260615_120226_e44f6d23-b5fe-48cb-adc3-91e652a2411e.png"],
+ ["9:07","hf_20260615_120228_37450f24-3770-49d3-935e-84aa55b31b12.png"],
+ ["9:10","hf_20260615_120230_290b84aa-d9f0-41fb-9c42-b4a7a557e84e.png"],
+ ["9:15","hf_20260615_120236_92114175-1dab-4412-ba1e-7e99fbd4c6e3.png"],
+ ["9:16","hf_20260615_120237_0cf36d7e-655c-4916-818c-10908df37704.png"],
+ ["9:17","hf_20260615_120238_e57ccba4-6b41-4ebb-8ad7-638abd603f6a.png"],
+ ["9:21","hf_20260615_120309_ecb81864-ab94-4dcc-b659-c16eba949af7.png"],
+ ["9:24","hf_20260615_120311_dbe402e5-24c2-4411-8872-ac6ce1ba771a.png"],
+ ["9:29","hf_20260615_120313_2989dcac-a1cf-42dc-a735-431696972036.png"],
+ ["9:31","hf_20260615_120316_023d14b1-31f8-40a0-8ccf-4565558ee725.png"],
+ ["9:35","hf_20260615_120318_9d93efda-dc54-4cd7-a54a-8c8a9d4d119f.png"],
+ ["9:39","hf_20260615_120322_d7621e3f-a31a-4737-b80f-45421a8815c7.png"],
+ ["9:44","hf_20260615_120324_54eb71b9-027e-41b0-8298-de1a122835f0.png"],
+ ["9:46","hf_20260615_120325_cf5afc7b-4ba1-4fd2-affd-834d37570354.png"],
+ ["9:50","hf_20260615_120352_428b2e4b-370c-47e7-b03e-80acd3c3eab2.png"],
+ ["9:55","hf_20260615_120355_38974717-47a5-4672-ba7c-7519f1694fba.png"],
+ ["10:02","hf_20260615_120357_92c0c530-e444-49b5-b5e4-10cb82b29072.png"],
+ ["10:06","hf_20260615_120359_850f7054-3a0f-48f3-a89f-8d38a8184f25.png"],
+ ["10:11","hf_20260615_120402_9a8a6cd0-135e-4c8e-99ed-8d4f59d7e333.png"],
+ ["10:23","hf_20260615_120405_aadd5cfa-3039-418d-8045-9797bc641be7.png"],
+ ["10:28","hf_20260615_120407_2f90d32f-2798-4a35-955d-3c01c5b1518a.png"],
+ ["10:31","hf_20260615_120409_4760d049-cebe-426a-abcd-d3ee4edd668a.png"],
+ ["10:37","hf_20260615_120435_de555e45-429a-4ec0-97a3-a84370d218fa.png"],
+ ["10:40","hf_20260615_120437_1724cebf-d116-424b-9aef-06a8785bb357.png"],
+ ["10:45","hf_20260615_120440_6fb93bd5-47d7-4168-8e3e-615d209458f1.png"],
+ ["10:47","hf_20260615_120442_ead2c63d-29e6-4b4b-ba87-99cb1507823e.png"],
+ ["10:53","hf_20260615_120445_451fcb1e-771f-4808-b6e9-958e1edeadb3.png"],
+ ["10:56","hf_20260615_120447_bc53d1fb-ee3e-41c0-bd18-fb675fd29029.png"],
+ ["11:01","hf_20260615_120449_6dedd8a9-e35f-4b37-8f05-8fb21b42fd4d.png"],
+ ["11:07","hf_20260615_120451_8ed3a3d2-6b8e-4263-bb4a-a1cb42aa8f5b.png"],
+ ["11:09","hf_20260615_120519_54bdc120-7051-45fb-8939-36cd26728bbb.png"],
+ ["11:13","hf_20260615_120521_b9d049b5-1c2c-4e50-a5a1-15fbbe4232d7.png"],
+ ["11:17","hf_20260615_120524_b1fbae70-1a6f-4f17-82f5-6f2ceabf10b0.png"],
+ ["11:20","hf_20260615_120526_c1560f24-5677-42b9-ac6a-42e01e7e6dac.png"],
+ ["11:21","hf_20260615_120528_88654f69-9ccd-4d41-a82d-c669a2e44455.png"],
+ ["11:23","hf_20260615_120531_10008a7a-6d60-4813-b46c-200cf23b1b4e.png"],
+ ["11:29","hf_20260615_120534_f457eee3-33ba-4e2f-a6b6-a964a63d7d4a.png"],
+ ["11:32","hf_20260615_120535_be35d941-1ece-4bee-a68e-c5d36aab4476.png"],
+ ["11:34","hf_20260615_120605_82edaaf3-bfe6-460f-ab86-d98f238cc6c8.png"],
+ ["11:38","hf_20260615_120608_7a591a44-96a5-48a0-8f1a-af15854591f0.png"],
+ ["11:40","hf_20260615_120611_13b5af01-845d-4a02-a8ee-59242f0e0455.png"],
+ ["11:45","hf_20260615_120612_6ef573a5-760a-4c01-9825-6543f87ca6b4.png"],
+ ["11:47","hf_20260615_120614_a9b82cfd-f293-421f-96dd-1d679a547cf5.png"],
+ ["11:51","hf_20260615_120616_b2e849e6-aab2-4181-8153-bf7ddc0e7370.png"],
+ ["11:53","hf_20260615_120619_592b3fe7-6d2f-4640-8c39-3fb820637d51.png"],
+ ["11:54","hf_20260615_120621_e3ac44f9-44d6-4a16-9d90-452efd73f5bd.png"],
+ ["11:55","hf_20260615_120647_9647c247-8f7e-42fa-8b52-8347380e4e80.png"],
+ ["12:01","hf_20260615_120649_0b7b1614-423b-4a91-adec-f72c4c951610.png"],
+ ["12:03","hf_20260615_120652_a864f229-50aa-4e9a-a8a9-e8b2b8de4232.png"],
+ ["12:04","hf_20260615_120654_d4e97219-ffb4-4969-af08-e5a7a43b40a6.png"],
+ ["12:07","hf_20260615_120657_1dcb13f0-1fda-412e-aa49-1928bf24092b.png"],
+ ["12:11","hf_20260615_120658_ef6bd0ae-b5f1-404b-989c-cee551db2e8d.png"],
+ ["12:17","hf_20260615_120700_a11291da-7a5d-40b2-8ce6-9c53730b16f3.png"]
+];
+
+const grid = document.getElementById('grid');
+const statusEl = document.getElementById('status');
+const dlAllBtn = document.getElementById('dlAll');
+const stopBtn = document.getElementById('stop');
+let stopFlag = false;
+
+function fileName(ts){ return ts + ".png"; } // e.g. "0:00.png"
+
+IMAGES.forEach(([ts, file], i) => {
+  const url = BASE + file;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <img loading="lazy" src="${url}" alt="${ts}">
+    <div class="meta">
+      <span class="ts">${ts}</span>
+      <a class="dl" href="${url}" data-ts="${ts}" download="${fileName(ts)}">Download</a>
+    </div>`;
+  grid.appendChild(card);
+});
+
+// Cross-origin: the download attribute alone won't rename, so fetch a blob.
+async function downloadOne(ts, url){
+  try {
+    const res = await fetch(url, { mode:'cors' });
+    if(!res.ok) throw new Error(res.status);
+    const blob = await res.blob();
+    const a = document.createElement('a');
+    const obj = URL.createObjectURL(blob);
+    a.href = obj; a.download = fileName(ts);
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(obj), 4000);
+    return true;
+  } catch(e){
+    // Fallback: open in new tab (manual save) if CORS blocks the fetch.
+    window.open(url, '_blank');
+    return false;
+  }
+}
+
+// Individual links -> blob download with timestamp name
+grid.addEventListener('click', async (e)=>{
+  const a = e.target.closest('a.dl');
+  if(!a) return;
+  e.preventDefault();
+  await downloadOne(a.dataset.ts, a.getAttribute('href'));
+});
+
+dlAllBtn.addEventListener('click', async ()=>{
+  stopFlag = false;
+  dlAllBtn.disabled = true; stopBtn.disabled = false;
+  let ok = 0, fail = 0;
+  for(let i=0;i<IMAGES.length;i++){
+    if(stopFlag){ statusEl.textContent = `Stopped at ${i}/${IMAGES.length}.`; break; }
+    const [ts, file] = IMAGES[i];
+    statusEl.textContent = `Downloading ${i+1}/${IMAGES.length} — ${ts}.png …`;
+    const good = await downloadOne(ts, BASE + file);
+    good ? ok++ : fail++;
+    await new Promise(r=>setTimeout(r, 350)); // throttle so the browser keeps up
+  }
+  if(!stopFlag) statusEl.textContent = `Done. Saved ${ok}, fallback-opened ${fail}.`;
+  dlAllBtn.disabled = false; stopBtn.disabled = true;
+});
+
+stopBtn.addEventListener('click', ()=>{ stopFlag = true; });
+</script>
+</body>
+</html>
