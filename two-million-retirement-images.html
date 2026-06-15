@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$2M Retirement — Image Downloads (JPG, named by timestamp)</title>
+<style>
+  :root { --bg:#0f1115; --card:#1a1d24; --line:#2a2f3a; --txt:#e7e9ee; --accent:#4f8cff; }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);}
+  header{position:sticky;top:0;z-index:10;background:#12141a;border-bottom:1px solid var(--line);padding:16px 20px;}
+  h1{margin:0 0 6px;font-size:18px;}
+  p.sub{margin:0;font-size:13px;color:#9aa3b2;}
+  .bar{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  button{background:var(--accent);color:#fff;border:0;padding:10px 16px;border-radius:8px;font-size:14px;cursor:pointer;}
+  button.secondary{background:#2a2f3a;}
+  button:disabled{opacity:.5;cursor:default;}
+  #status{font-size:13px;color:#9aa3b2;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;padding:20px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;}
+  .card img{width:100%;aspect-ratio:16/9;object-fit:contain;background:#fff;}
+  .meta{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .ts{font-weight:700;font-size:15px;}
+  .meta button{font-size:12px;padding:6px 10px;border-radius:6px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>$2M Retirement — full storyboard (116 images)</h1>
+  <p class="sub">Each file downloads as a <b>JPG</b> named after its script timestamp (e.g. <code>0:00.jpg</code>). Click <b>Download all</b>, or grab any single image.</p>
+  <div class="bar">
+    <button id="dlAll">⬇ Download all (116 JPG)</button>
+    <button id="stop" class="secondary" disabled>Stop</button>
+    <span id="status">Ready.</span>
+  </div>
+  <p class="sub" style="margin-top:8px">Note: Windows/macOS don't allow “:” in filenames, so your browser may save <code>0:00.jpg</code> as <code>0_00.jpg</code>. Order stays correct.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const BASE = "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/";
+const JPEG_QUALITY = 0.92;
+// [timestamp, source png filename]
+const IMAGES = [
+ ["0:00","hf_20260615_183037_d37bba77-f51d-40af-8912-9b7dd3ad7136.png"],
+ ["0:03","hf_20260615_183039_5b2da880-5a7c-4cd4-bd09-f97c6d851311.png"],
+ ["0:05","hf_20260615_183041_a6d226c0-a1ff-401d-989d-9a5c7590d7c1.png"],
+ ["0:07","hf_20260615_183044_d57741b2-472e-410c-a8c2-5a44e96e954d.png"],
+ ["0:09","hf_20260615_183046_e8d0bf9e-7cab-4728-a2d0-e56cd899b7d5.png"],
+ ["0:12","hf_20260615_183048_57b155ed-a052-4fb1-bd58-0453078b63a0.png"],
+ ["0:15","hf_20260615_183127_658d288b-3602-4a86-950f-4faff2a20b13.png"],
+ ["0:17","hf_20260615_183129_820690ec-4e37-4433-8daa-3f48798c057c.png"],
+ ["0:24","hf_20260615_183132_2bc84220-db45-4b57-b961-6261974a2e1c.png"],
+ ["0:27","hf_20260615_183134_1a6a0d4e-7845-42be-bf78-32291e62d44b.png"],
+ ["0:31","hf_20260615_183139_e68bad00-3c2d-4507-a131-541a8ebfa488.png"],
+ ["0:33","hf_20260615_183140_e65fb52c-31b8-40f2-8fb4-60b272e6f537.png"],
+ ["0:39","hf_20260615_183141_20a4167c-18b3-4f19-b594-120c4d63bd73.png"],
+ ["0:46","hf_20260615_183144_2d5b1331-c2c2-4a7b-b5e5-a25aa96a2e3e.png"],
+ ["0:48","hf_20260615_183217_4c57a87b-0ea7-4686-aab4-781a0ce04296.png"],
+ ["0:56","hf_20260615_183220_a6369a93-543f-44f9-9d45-44b6b60925f6.png"],
+ ["0:59","hf_20260615_183222_d194230e-4b10-4995-97f9-112569f5c395.png"],
+ ["1:07","hf_20260615_183224_e88ddd2c-3842-407b-b215-9898d7f27822.png"],
+ ["1:10","hf_20260615_183226_ec3135d8-3585-4ecf-b624-8a9bd675a5c1.png"],
+ ["1:14","hf_20260615_183229_453c34da-1179-4ed1-bcc2-55749710cf75.png"],
+ ["1:17","hf_20260615_183231_3799e9e5-9d6a-4460-bee4-d61a52347410.png"],
+ ["1:20","hf_20260615_183233_98b29a01-3020-4070-9ca2-137001a350fe.png"],
+ ["1:22","hf_20260615_183304_8ae6535e-8140-4ac3-870d-2fdb880ba839.png"],
+ ["1:27","hf_20260615_183307_c66d495a-c1c8-4178-b966-6cbaf53d0000.png"],
+ ["1:34","hf_20260615_183309_63a38878-f223-4682-8db5-0fcb766b8bdb.png"],
+ ["1:37","hf_20260615_183311_a851f530-16b0-4ffa-b606-0785f774d441.png"],
+ ["1:42","hf_20260615_183314_45d71ab6-4237-4ff9-bf12-f967c5b09a88.png"],
+ ["1:47","hf_20260615_183317_54bdaf4f-0673-484a-93e5-3a47ce902611.png"],
+ ["1:51","hf_20260615_183319_8f7e0c4d-4e2c-4fa6-ae03-778a7d2d72df.png"],
+ ["1:58","hf_20260615_183321_fdcc7996-cbc4-42dc-834b-34b24fb877a3.png"],
+ ["2:03","hf_20260615_183351_4d5c1b2b-3130-470c-b1b3-de96ece80691.png"],
+ ["2:05","hf_20260615_183354_30dbb926-ae6a-4ab5-b1e6-181b3dd72038.png"],
+ ["2:16","hf_20260615_183356_b34d4b2c-fda2-424d-9947-16919a26af21.png"],
+ ["2:18","hf_20260615_183358_1ddef50e-4e16-4e47-a48c-83feaf929b54.png"],
+ ["2:20","hf_20260615_183400_84ae2d78-cb9b-485f-b968-bb71a0def4b6.png"],
+ ["2:26","hf_20260615_183403_99b85201-fa2f-4ed3-aeff-381190af1a36.png"],
+ ["2:29","hf_20260615_183405_199c2072-71a5-48c5-93cf-8d122256f365.png"],
+ ["2:35","hf_20260615_183407_e37f2e6c-ecd7-41d7-a122-dd45565dcfdc.png"],
+ ["2:37","hf_20260615_183436_e06dab27-0bbb-4d91-ad9a-947bbc0e85e2.png"],
+ ["2:39","hf_20260615_183438_c73fe1f5-f36a-45a8-8ed8-a50100762502.png"],
+ ["2:50","hf_20260615_183441_c9cc2563-125f-4a1e-9681-c47ef952cdca.png"],
+ ["2:54","hf_20260615_183443_18ca4e74-f273-46fb-bd9a-b803eba6ce38.png"],
+ ["3:08","hf_20260615_183446_21fccfc8-be7d-4cb5-8563-6beed3819313.png"],
+ ["3:15","hf_20260615_183448_2f06797f-6f60-48a2-90fc-bbb43e9d1881.png"],
+ ["3:23","hf_20260615_183451_20853b22-06e7-4d68-9d3c-f956acad3379.png"],
+ ["3:32","hf_20260615_183452_04a6749e-49af-40a2-bf94-1014d57237ef.png"],
+ ["3:36","hf_20260615_183519_f7f1a3c0-41d8-4185-b180-bb08b72a64cf.png"],
+ ["3:38","hf_20260615_183524_8893bebd-4dc4-48f1-8edd-993accc111e3.png"],
+ ["3:50","hf_20260615_183525_fecdcd20-5562-4356-8af4-9c30a39c94dc.png"],
+ ["3:57","hf_20260615_183526_e7128ee5-c421-4d7c-80ac-362ada7349b4.png"],
+ ["4:02","hf_20260615_183529_a0ce53c7-588b-4361-84f5-052b5ae474fc.png"],
+ ["4:06","hf_20260615_183531_4db462d0-beea-4932-977e-e80a5da65112.png"],
+ ["4:18","hf_20260615_183533_1133ca1e-2317-4863-ad37-7ad3db0ca84f.png"],
+ ["4:28","hf_20260615_183535_8f5d6844-b00e-4166-8dd7-85ada325c97b.png"],
+ ["4:42","hf_20260615_183603_dc3d2a99-0bd7-47b3-b748-ebe4365bbaf2.png"],
+ ["4:46","hf_20260615_183607_54c66468-3355-4842-a02b-ad11b796509e.png"],
+ ["4:50","hf_20260615_183608_f3baf14a-4ad3-4266-9499-8a7888ce093d.png"],
+ ["4:58","hf_20260615_183610_bd583b64-1e81-49e2-940b-0994d69ffac1.png"],
+ ["5:02","hf_20260615_183613_3e9d43fc-c736-43b5-9dfd-ccf0e512ff71.png"],
+ ["5:05","hf_20260615_183616_6d0e3228-9fef-4d6f-af7d-0334292c97e6.png"],
+ ["5:14","hf_20260615_183618_38660f6a-e7fb-4cab-9f43-7c009aefd3a4.png"],
+ ["5:17","hf_20260615_183622_6bca7de4-2bfe-4d29-a134-e6532c031090.png"],
+ ["5:21","hf_20260615_183651_cb96a230-c836-4b15-a634-ede766866b6d.png"],
+ ["5:26","hf_20260615_183653_79f1d5a7-4fbd-4d51-9590-722de5db551a.png"],
+ ["5:27","hf_20260615_183655_d5db2f3a-9293-43b3-ad9f-98318454d0b2.png"],
+ ["5:29","hf_20260615_183657_71798458-9e14-448e-8b23-5225f0a679c1.png"],
+ ["5:32","hf_20260615_183700_4e26f902-3505-4092-9c25-e9230021e3bf.png"],
+ ["5:37","hf_20260615_183703_5d74afc3-9bc5-4df1-92bc-3e2de827001e.png"],
+ ["5:45","hf_20260615_183705_51a0f170-d6f7-4f0c-b939-73e5936a35da.png"],
+ ["5:55","hf_20260615_183707_4095e8d6-a875-4e13-8c42-774eab5b94b6.png"],
+ ["6:01","hf_20260615_183741_097a904c-500d-4e6d-b8a6-feb66e0b4b5a.png"],
+ ["6:04","hf_20260615_183743_629d2046-4242-41fb-a352-89dcd8c6ec7d.png"],
+ ["6:05","hf_20260615_183746_5878a811-7acd-41a2-9f7b-60ae6d4a1b5c.png"],
+ ["6:26","hf_20260615_183749_52f4f855-a0f4-43eb-b0cc-544e1b6e24b4.png"],
+ ["6:34","hf_20260615_183751_d85c814d-3798-4fdf-8c17-7cc0b3524ec4.png"],
+ ["6:41","hf_20260615_183754_173c034b-c852-4706-88c1-0b69f0086ebc.png"],
+ ["6:49","hf_20260615_183756_05433963-4c5e-4927-a5df-45f54bb27f18.png"],
+ ["6:55","hf_20260615_183758_dc1fa12e-c469-4c78-996a-8781925e0bb6.png"],
+ ["6:58","hf_20260615_183839_de9c1456-7efe-48c3-965f-7243ca1436a0.png"],
+ ["7:05","hf_20260615_183841_36b91559-530e-4878-bd34-e12965f32af9.png"],
+ ["7:07","hf_20260615_183844_9a423edd-ccd7-4627-96b1-e514c458162a.png"],
+ ["7:14","hf_20260615_183846_814b0476-e5a6-410f-8aff-d55bcdb86fc5.png"],
+ ["7:24","hf_20260615_183849_2222db82-82b6-4727-a7d6-0b3191f47555.png"],
+ ["7:30","hf_20260615_183851_2de985aa-eac9-4aa2-beb2-e34e1bf65167.png"],
+ ["7:36","hf_20260615_183853_c08f33f6-c602-4660-964c-6995f905ef05.png"],
+ ["7:40","hf_20260615_183855_22f4545d-31f8-4827-b9f6-b1bcd5dba227.png"],
+ ["7:42","hf_20260615_183923_48c38c59-7909-427a-80b2-357f3b4ec190.png"],
+ ["7:48","hf_20260615_183925_a18b8dd7-12dc-40ce-8800-b341e1b5efa3.png"],
+ ["7:51","hf_20260615_183928_de41cd3d-b750-4e75-b3c2-315f0791fb88.png"],
+ ["7:54","hf_20260615_183930_c8bb845f-59a9-4c39-9025-49878794f9a5.png"],
+ ["7:57","hf_20260615_183932_87507434-b58d-428d-9330-9bbde72ff0cc.png"],
+ ["8:04","hf_20260615_183934_505c2aae-44f0-4842-bc57-549143a85e5c.png"],
+ ["8:10","hf_20260615_183937_0ad607ca-0ca6-4209-9a5f-eabb61c63126.png"],
+ ["8:16","hf_20260615_183939_1b5c2cb7-d1f5-48e0-8720-ccbbc1257cd2.png"],
+ ["8:20","hf_20260615_184008_5f89ebe1-2cb6-4fd0-a7a3-317f2c605eb9.png"],
+ ["8:26","hf_20260615_184010_c5b89749-27da-476c-9e39-f78a7e37d86a.png"],
+ ["8:32","hf_20260615_184013_6a66ee90-ca46-43dc-bd86-bcb8bdf96b49.png"],
+ ["8:38","hf_20260615_184015_b242e78e-6a78-4f56-8592-1028c6608bc9.png"],
+ ["8:42","hf_20260615_184018_a7541b7e-cf83-4674-a9f0-f97eb17a9e3b.png"],
+ ["8:48","hf_20260615_184020_47a07a97-f3f7-4576-b33f-ad99f12f6874.png"],
+ ["8:54","hf_20260615_184022_8a0db261-d9a6-4674-9e56-4567c4597a11.png"],
+ ["8:59","hf_20260615_184024_8d74e552-930c-4cfb-9b1a-3705eb12fb4e.png"],
+ ["9:03","hf_20260615_184101_5a15117a-e419-4fed-b2dd-47447c3551a3.png"],
+ ["9:13","hf_20260615_184104_c9561474-24fc-4573-bfc3-edae4c0cf926.png"],
+ ["9:22","hf_20260615_184106_cd36e079-3152-4ed7-aa86-ba37217433f7.png"],
+ ["9:24","hf_20260615_184109_13ecfdee-ab30-4f84-9b31-294e17e760da.png"],
+ ["9:32","hf_20260615_184113_1ed2d1e3-719b-49fd-b75c-ee525213b264.png"],
+ ["9:37","hf_20260615_184115_ede2a848-fe2e-4a23-bd14-f6a6d6494d9b.png"],
+ ["9:39","hf_20260615_184116_78ed5d03-2b3b-42c2-bc16-5c5e5dc71864.png"],
+ ["9:42","hf_20260615_184118_b348c6a9-b774-48ba-8f89-56174f4dd988.png"],
+ ["9:44","hf_20260615_184145_eaa7d718-951d-4b16-b63b-5e2bf4c582bb.png"],
+ ["9:48","hf_20260615_184148_449e0634-d62e-4013-a701-4c2abd0655b9.png"],
+ ["9:57","hf_20260615_184150_a737749a-4217-4350-8e48-6b24af6a8f3a.png"],
+ ["10:06","hf_20260615_184152_207607b8-f0d6-4000-9d23-c05d41850a52.png"],
+ ["10:11","hf_20260615_184155_e34cf0f0-4441-4bd6-b465-37f33360e6fc.png"],
+ ["10:16","hf_20260615_184157_13dd93d1-2e38-48e7-8c12-b06683cd9343.png"]
+];
+
+const grid=document.getElementById('grid');
+const statusEl=document.getElementById('status');
+const dlAllBtn=document.getElementById('dlAll');
+const stopBtn=document.getElementById('stop');
+let stopFlag=false;
+
+function fileName(ts){return ts+".jpg";}
+
+IMAGES.forEach(([ts,file])=>{
+  const url=BASE+file;
+  const card=document.createElement('div');
+  card.className='card';
+  const img=document.createElement('img');
+  img.loading='lazy'; img.src=url; img.alt=ts;
+  const meta=document.createElement('div'); meta.className='meta';
+  const span=document.createElement('span'); span.className='ts'; span.textContent=ts;
+  const btn=document.createElement('button'); btn.textContent='Download JPG';
+  btn.onclick=()=>downloadOne(ts,url);
+  meta.appendChild(span); meta.appendChild(btn);
+  card.appendChild(img); card.appendChild(meta);
+  grid.appendChild(card);
+});
+
+// Fetch the PNG, paint it onto a white canvas, export as JPEG, then save.
+async function toJpegBlob(url){
+  const res=await fetch(url,{mode:'cors'});
+  if(!res.ok) throw new Error(res.status);
+  const pngBlob=await res.blob();
+  const bmp=await createImageBitmap(pngBlob);
+  const canvas=document.createElement('canvas');
+  canvas.width=bmp.width; canvas.height=bmp.height;
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#ffffff';                 // JPG has no transparency -> white bg
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(bmp,0,0);
+  bmp.close&&bmp.close();
+  return await new Promise(r=>canvas.toBlob(r,'image/jpeg',JPEG_QUALITY));
+}
+
+function saveBlob(blob,name){
+  const a=document.createElement('a');
+  const obj=URL.createObjectURL(blob);
+  a.href=obj; a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(obj),4000);
+}
+
+async function downloadOne(ts,url){
+  try{
+    const jpg=await toJpegBlob(url);
+    saveBlob(jpg,fileName(ts));
+    return true;
+  }catch(e){
+    window.open(url,'_blank'); // fallback if CORS blocks the canvas
+    return false;
+  }
+}
+
+dlAllBtn.addEventListener('click',async()=>{
+  stopFlag=false; dlAllBtn.disabled=true; stopBtn.disabled=false;
+  let ok=0,fail=0;
+  for(let i=0;i<IMAGES.length;i++){
+    if(stopFlag){statusEl.textContent=`Stopped at ${i}/${IMAGES.length}.`;break;}
+    const [ts,file]=IMAGES[i];
+    statusEl.textContent=`Converting & downloading ${i+1}/${IMAGES.length} — ${ts}.jpg …`;
+    const good=await downloadOne(ts,BASE+file);
+    good?ok++:fail++;
+    await new Promise(r=>setTimeout(r,400)); // throttle
+  }
+  if(!stopFlag) statusEl.textContent=`Done. Saved ${ok} JPG, fallback-opened ${fail}.`;
+  dlAllBtn.disabled=false; stopBtn.disabled=true;
+});
+stopBtn.addEventListener('click',()=>{stopFlag=true;});
+</script>
+</body>
+</html>
