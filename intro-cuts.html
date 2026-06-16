@@ -1,0 +1,31 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Intro Cuts — Downloader</title><style>
+body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0f1115;color:#e8eaed;margin:0}
+header{position:sticky;top:0;background:#171a21;padding:16px 20px;border-bottom:1px solid #262b36}
+h1{font-size:17px;margin:0 0 6px}p{margin:4px 0;font-size:13px;color:#aab2c0}
+button{background:#2f6fed;color:#fff;border:0;padding:10px 16px;border-radius:8px;font-size:14px;cursor:pointer;margin-top:8px}
+#s{font-size:13px;color:#aab2c0;margin-top:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;padding:20px}
+.card{background:#171a21;border:1px solid #262b36;border-radius:10px;overflow:hidden}
+.card img{width:100%;display:block;background:#fff;aspect-ratio:16/9;object-fit:contain}
+.m{display:flex;justify-content:space-between;padding:8px 10px;font-size:13px}</style></head>
+<body><header><h1>New Intro Cuts (8 images)</h1>
+<p>Saved as <b>JPG</b>, named by their 2-second slot (0_00 … 0_14).</p>
+<button id="zip">Download all as a ZIP</button><div id="s">Ready.</div></header>
+<div class="grid" id="g"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const IMG=[{"ts": "0:00", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260616_230555_24c3d205-33cf-4042-8f0f-47552185d700.png"}, {"ts": "0:02", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260616_230557_84686490-820d-484a-9f23-dcee880c0a36.png"}, {"ts": "0:04", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260616_230559_8c261065-2809-4d04-84a6-d4e557f1f939.png"}, {"ts": "0:06", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260616_230602_3a62de78-9121-41ee-bece-869cacfc580b.png"}, {"ts": "0:08", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260616_230604_87d984e8-3b0a-432b-b4f5-a51be3e6fa9d.png"}, {"ts": "0:10", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260616_230606_4b67ba31-d8d2-405b-9610-5e2901e9c6fa.png"}, {"ts": "0:12", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260616_230609_f9d92208-cd75-4ec5-abe1-df18a4bdb8d7.png"}, {"ts": "0:14", "url": "https://d8j0ntlcm91z4.cloudfront.net/user_3EJ7eXPRDK8j3ZmKXW0B5KfoJTg/hf_20260616_230611_7edbf3d0-6aac-427b-a5b7-86354710823b.png"}];const s=document.getElementById('s');const g=document.getElementById('g');
+const fn=t=>t.replace(/:/g,'_')+'.jpg';
+async function jpg(u){const b=await(await fetch(u,{mode:'cors'})).blob();const bm=await createImageBitmap(b);
+const c=document.createElement('canvas');c.width=bm.width;c.height=bm.height;const x=c.getContext('2d');
+x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(bm,0,0);
+return await new Promise(r=>c.toBlob(r,'image/jpeg',0.92));}
+IMG.forEach(it=>{const d=document.createElement('div');d.className='card';
+d.innerHTML=`<img src="${it.url}"><div class="m"><b>${it.ts}</b><span>${fn(it.ts)}</span></div>`;g.appendChild(d);});
+document.getElementById('zip').onclick=async()=>{const z=new JSZip();
+for(let i=0;i<IMG.length;i++){s.textContent='Adding '+(i+1)+'/'+IMG.length;z.file(fn(IMG[i].ts),await jpg(IMG[i].url));}
+s.textContent='Zipping…';const b=await z.generateAsync({type:'blob'});
+const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='intro_cuts_jpg.zip';a.click();
+s.textContent='Done — intro_cuts_jpg.zip downloaded.';};
+</script></body></html>
