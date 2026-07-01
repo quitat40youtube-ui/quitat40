@@ -1,0 +1,61 @@
+index	start	end	type	filename	description
+1	00:00	00:03	char	001_00-00.png	the same man standing looking slightly worried with one hand on his chin thinking, a small wobbly hand-drawn label reading "30s" floating beside his head
+2	00:03	00:05	obj	002_00-03.png	a piggy bank with a small stack of coins and a couple of dollar bills beside it, a wobbly hand-drawn label reading "SAVED"
+3	00:05	00:08	char	003_00-05.png	the same man standing at a fork in a road that splits into two paths going left and right, a big wobbly question mark above each path
+4	00:08	00:11	char	004_00-08.png	the same man lying asleep in a small bed with "Zzz" above him and dollar bills and coins raining down onto him
+5	00:11	00:13	obj	005_00-11.png	a tiny seed sprouting on the left growing into a giant tree whose leaves are dollar signs on the right, with a big upward arrow between them
+6	00:13	00:15	char	006_00-13.png	the same man shrugging with both hands up and a giant wobbly question mark above his head
+7	00:15	00:18	char	007_00-15.png	the same man relaxing on a beach lounge chair wearing sunglasses with a money bag beside him and a small palm tree
+8	00:18	00:23	obj	008_00-18.png	a big versus screen: left side wobbly text "DIVIDENDS", right side wobbly text "INDEX FUNDS", a large wobbly "VS" in the middle
+9	00:23	00:29	char	009_00-23.png	the same man pointing confidently at a wooden signpost with two arrow signs pointing in different directions
+10	00:29	00:34	char	010_00-29.png	the same man standing in a smart casual outfit holding a briefcase, a wobbly hand-drawn label reading "YOUR 30s" beside him
+11	00:34	00:38	char	011_00-34.png	the same man holding just a couple of coins with a graduation cap crossed out beside him, a wobbly label reading "NOT BROKE, NOT RICH"
+12	00:38	00:43	obj	012_00-38.png	three simple wobbly icons in a row: a little house, two small stick children, and a briefcase
+13	00:43	00:48	char	013_00-43.png	the same man standing thoughtfully next to a big balance scale weighing a coin against a clock
+14	00:48	00:53	obj	014_00-48.png	an hourglass next to a growing snowball of coins with a big upward arrow, a wobbly label reading "COMPOUNDING"
+15	00:53	00:58	obj	015_00-53.png	a wobbly calendar page reading "10 YEARS" with a warning exclamation mark and a red X over a wrong path
+16	00:58	01:03	char	016_00-58.png	the same man as a teacher pointing at a chalkboard with big wobbly text reading "DIVIDEND INVESTING"
+17	01:03	01:08	char	017_01-03.png	the same man holding a paper share certificate while a company building hands him a bag of money
+18	01:08	01:14	obj	018_01-08.png	a business building with one slice cut out like a pie, next to a bank check with a big dollar sign, a wobbly label reading "EVERY QUARTER"
+19	01:14	01:20	obj	019_01-14.png	a bank check labeled "DIVIDEND" with an upward arrow, beside a calendar reading "DECADES"
+20	01:20	01:25	char	020_01-20.png	the same man smiling happily watching coins drop into an open wallet in his hands
+21	01:25	01:31	char	021_01-25.png	the same man with a big smile holding cash, a wobbly hand-drawn label reading "INCOME" floating beside him
+22	01:31	01:36	char	022_01-31.png	the same man standing calm and steady while a jagged up-and-down market line wobbles behind him and coins stay stacked steady at his feet
+23	01:36	01:41	char	023_01-36.png	the same man calmly refusing to press a big red button labeled "SELL", one hand held up flat
+24	01:41	01:46	obj	024_01-41.png	a see-saw balance scale showing a trade-off, a coin on one side and a small plant on the other, a wobbly label reading "TRADE-OFF"
+25	01:46	01:52	obj	025_01-46.png	coins flying out of a shrinking business building with a downward arrow, a wobbly label reading "NOT REINVESTED"
+26	01:52	01:57	obj	026_01-52.png	two plants side by side, a short slow one with a snail labeled "DIVIDEND" and a taller faster one labeled "GROWTH"
+27	01:57	02:03	char	027_01-57.png	the same man turning to flip a big chalkboard that now reads "INDEX FUNDS"
+28	02:03	02:09	obj	028_02-03.png	a big shopping basket full of many tiny company buildings, a wobbly label reading "THE MARKET"
+29	02:09	02:14	obj	029_02-09.png	a grid of many tiny identical company buildings, a wobbly label reading "1000s OF COMPANIES"
+30	02:14	02:20	obj	030_02-14.png	a small price tag reading "LOW FEES" next to a tiny single coin, a wobbly label reading "NO STOCK PICKING"
+31	02:20	02:26	obj	031_02-20.png	a big upward arrow line going up over a simple timeline, a wobbly label reading "MARKET GROWS"
+32	02:26	02:31	obj	032_02-26.png	a simple bar chart with bars getting taller from left to right, a wobbly label reading "AVERAGE RETURNS"
+33	02:31	02:37	obj	033_02-31.png	a race between a trophy labeled "INDEX" crossing a finish line first and a sweating stick figure stock-picker behind, a wobbly label reading "FAIL TO BEAT"
+34	02:37	02:42	char	034_02-37.png	the same man standing proudly beside a tall mountain made of stacked coins, a wobbly label reading "WEALTH"
+35	02:42	02:48	obj	035_02-42.png	coins flowing back into a business building in a loop with a small snowball, a wobbly label reading "REINVEST"
+36	02:48	02:55	obj	036_02-48.png	a snowball of coins rolling down a hill getting bigger and bigger with dollar signs on it, a wobbly label reading "SNOWBALL"
+37	02:55	03:00	char	037_02-55.png	the same man holding two signs one in each hand and shrugging, a big wobbly question reading "WHICH WINS?" above him
+38	03:00	03:05	char	038_03-00.png	the same man thinking with a thought bubble containing a money bag and a target with an arrow in the bullseye
+39	03:05	03:10	obj	039_03-05.png	a wobbly "VS" crossed out and replaced by a speech bubble, a wobbly label reading "A CONVERSATION"
+40	03:10	03:19	char	040_03-10.png	the same man pointing at a big nest with a giant golden egg in it, a wobbly checkmark and a label reading "INDEX FUNDS"
+41	03:21	03:28	obj	041_03-21.png	a pair of scissors cutting a small price tag, a wobbly label reading "LOW FEES"
+42	03:28	03:35	obj	042_03-28.png	many eggs spread across many small baskets, a wobbly label reading "DIVERSIFIED"
+43	03:35	03:43	obj	043_03-35.png	several upward arrows stacking on top of each other next to a snowball, a wobbly label reading "COMPOUNDING"
+44	03:43	03:50	char	044_03-43.png	the same man standing triumphantly on top of a big mountain made of money with both arms raised
+45	03:50	03:58	char	045_03-50.png	the same man relaxing in a hammock while a steady stream of coins flows toward him, a wobbly label reading "PASSIVE INCOME"
+46	03:58	04:06	obj	046_03-58.png	a stack of paper bills and invoices being stamped "PAID" by a big dividend check
+47	04:06	04:12	char	047_04-06.png	the same man hugging a stack of paper share certificates protectively, a big red X over the word "SELL"
+48	04:12	04:19	char	048_04-12.png	the same man standing calm and dry under an umbrella while a scary storm cloud with lightning and a jagged market line rages around him
+49	04:20	04:26	obj	049_04-20.png	a hand slamming a big red "SELL" button while coins shatter and fall, a warning exclamation mark, a wobbly label reading "WRONG TIME"
+50	04:26	04:32	char	050_04-26.png	the same man laying big bricks to build a foundation, the bricks labeled "INDEX FUNDS"
+51	04:32	04:38	char	051_04-32.png	the same man adding a new layer of bricks labeled "DIVIDENDS" on top of a foundation labeled "INDEX FUNDS"
+52	04:38	04:45	obj	052_04-38.png	a field with a money crop growing on the left and a farmer harvesting coins with a basket on the right, wobbly labels reading "GROW" then "HARVEST"
+53	04:45	04:52	obj	053_04-45.png	a carrot on a stick labeled "HIGH YIELD" dangling over a bear trap labeled "TRAP"
+54	04:52	04:59	obj	054_04-52.png	a huge percent sign that is cracked and crumbling apart, a warning exclamation mark, a wobbly label reading "NOT SUSTAINABLE"
+55	04:59	05:08	char	055_04-59.png	the same man giving a big thumbs up beside a shiny coin stamped with a wobbly "QUALITY" ribbon
+56	05:08	05:14	char	056_05-08.png	the same man smiling and pointing at a giant clock and hourglass, a wobbly label reading "TIME" and a small "30s"
+57	05:14	05:20	obj	057_05-14.png	a big clock sitting on a throne wearing a crown, a wobbly label reading "TIME > MONEY"
+58	05:20	05:26	char	058_05-20.png	the same man with a big tangled scribble of confusion over his head overthinking, and a wobbly arrow sign reading "JUST START" pointing forward
+59	05:26	05:31	obj	059_05-26.png	two separate paths both leading to the same big pile of money, a wobbly label reading "BOTH WORK"
+60	05:31	05:36	char	060_05-31.png	the same man giving a big thumbs up and pointing down at a comment box with a thumbs-up like icon, a wobbly label reading "COMMENT BELOW"
