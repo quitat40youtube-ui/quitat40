@@ -22,6 +22,8 @@ scene embeds the element so he stays identical across shots.
 - `download.sh` / `video4-images.html` — added after generation, same as videos 1–3
 
 ## Status
-Scene plan complete (60 scenes). Scene 1 generated
-(job `7d7345d7-8587-408c-81ff-87e58f3a7e71`). Remaining 59 pending — generation
-was interrupted by a temporary Higgsfield MCP connection drop and will resume.
+All 60 scenes generated in Higgsfield (`nano_banana_2`, 16:9). Job IDs recorded
+in `manifest.tsv`. The images live in your Higgsfield workspace — open Higgsfield
+to review/download them. `urls.tsv` + `scenes.csv` + `download.sh` +
+`video4-images.html` can be built next by resolving each job_id to its CDN URL,
+same as videos 1–3.
