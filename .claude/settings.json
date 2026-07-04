@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Higgsfield__generate_image",
+      "mcp__Higgsfield"
+    ]
+  }
+}
