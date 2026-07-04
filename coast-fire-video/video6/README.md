@@ -1,7 +1,7 @@
-# Video 6 — "$12/Week Dividend Investing" — Intro Images
+# Video 6 — "$12/Week Dividend Investing" — Scene Images
 
-6 scene images for the rapid-cut intro (0:00–0:15, ~2–3s per scene) of the new
-dividend-investing script.
+119 scene images: a rapid-cut intro (0:00–0:15, 6 scenes, ~2–3s each) followed by
+one scene per remaining script timestamp through 9:57.
 
 ## Style & character
 Intentionally bad MS Paint childish look — wobbly thick black outlines, dot eyes,
@@ -11,8 +11,8 @@ reference **Element** used in videos 3–5 (id `5c3bfd16-adb2-4a38-9547-7ec29acf
 embedded on every character scene so he stays identical.
 
 - **Model:** `nano_banana_pro` (Nano Banana Pro, 2K) for **all** images, 16:9.
-- **Character scenes (4):** prompt embeds the Austin-O element.
-- **Object / text scenes (2):** plain prompt.
+- **Character scenes (~45):** prompt embeds the Austin-O element.
+- **Object / text / chart scenes (~74):** plain prompt.
 
 ## Files
 - `scenes_plan.tsv` — master plan: `index, start, end, type, filename, description`
@@ -23,9 +23,10 @@ embedded on every character scene so he stays identical.
 - `scenes.csv` — full index with URLs where resolved
 
 ## Status
-All 6 intro images generated in Higgsfield (`nano_banana_pro`, 2K, 16:9). Job IDs
-recorded in `manifest.tsv`. Scene 1's CDN URL is resolved in `urls.tsv` /
-`scenes.csv`; the other 5 completed generation but this session's tool
-permissions blocked resolving their CDN URLs (`job_display` / `show_medias`
-were denied) — open the Higgsfield workspace to view/download them, or resolve
-the remaining job IDs from `manifest.tsv` to fill in `urls.tsv`.
+All 119 images generated in Higgsfield (`nano_banana_pro`, 2K, 16:9). Job IDs
+for every scene are recorded in `manifest.tsv`. Only scene 1's CDN URL got
+resolved into `urls.tsv` / `scenes.csv` — this session's tool permissions
+blocked `job_display` / `show_medias` for the rest (denied), so the other 118
+completed generations don't have their CDN URLs filled in here. Open the
+Higgsfield workspace to view/download them, or resolve the remaining job IDs
+from `manifest.tsv` into `urls.tsv` when that tool access is available.
