@@ -1,0 +1,7 @@
+index	start	end	type	filename	job_id
+1	0:00	0:02	char	0-00.jpg	b94e13c9-feba-4b45-a320-a197b2f7d6c5
+2	0:02	0:04	obj	0-02.jpg	7e9fe2f5-6d04-44b2-89ec-b8dec498542c
+3	0:04	0:07	char	0-04.jpg	efb8231d-5f20-4078-ba9f-b36b29e7d41c
+4	0:07	0:09	obj	0-07.jpg	944c7cdc-5831-4359-86aa-8e7236aa65ec
+5	0:09	0:12	char	0-09.jpg	bf5dabb1-547e-4932-b478-548173503245
+6	0:12	0:15	char	0-12.jpg	aa861819-51af-494a-b743-8672c8a5df37
