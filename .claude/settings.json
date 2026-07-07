@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Edit",
+      "mcp__Higgsfield__generate_image"
+    ],
+    "defaultMode": "acceptEdits"
+  }
+}
