@@ -1,30 +1,38 @@
-# Video 3 — "Retire in your 40s" — Scene Images
+# Video 3 — "Retire in your 40s / Best ETFs for FIRE" — Scene Images
 
-96 images, one per script timestamp (with a rapid-cut intro), for the third explainer video.
+179 images, one per script beat across the full ~20-minute script, in the
+channel's intentionally-bad MS Paint style.
 
 ## Style & character
 Intentionally bad MS Paint childish look — wobbly thick black outlines, dot eyes,
-flat colors, white background, centered, 16:9. The **main character** (bearded man,
-grey blazer) is your uploaded channel character, reproduced as a canonical "hero"
-image and used as a reference on every scene he appears in, so he stays identical.
+flat colors, white background, centered, 16:9. The **main character** (round head,
+short black hair + beard, open grey blazer over a white t-shirt, thin black line
+limbs) is the uploaded channel character, held consistent by passing his reference
+image on every scene he appears in.
 
-- **Character scenes** (40) → `nano_banana_pro` + hero reference (higher quality)
-- **Object / text / chart scenes** (56) → `z_image` (cheapest)
-- **Intro (0:00–0:15)** → rapid cuts, ~2–3s per scene (6 scenes) for engagement
+- **Rapid-cut intro (0:00–0:15)** — 6 scenes, ~2–3s each, for a high-engagement hook.
+- **Character scenes** (31) and **object / text / chart scenes** (148).
+- **All images generated with Nano Banana** (`nano_banana`) — the cheap model, used
+  for every scene (character scenes also get the hero reference image).
 
 ## Files
-- `scenes.csv` — master index: `index, start, end, type, filename, description, url`
+- `scenes.csv` — master index: `index, start, end, type, jpg_filename, png_filename, url`
 - `manifest.tsv` — `index, start, end, type, job_id`
 - `urls.tsv` — `job_id, image_url`
-- `download.sh` — downloads all 96 into `images/`, named `001_0-00.png … 096_8-48.png`
-- `video3-images.html` — open in a browser to view all 96 and download them with one button
+- `urls_download.tsv` — `png_filename, url` (data for `download.sh`)
+- `download.sh` — downloads all 179 as PNG into `images/`, named `001_00-00.png … 179_20-12.png`
+- `video3-images-JPG-ZIP.html` — open in a browser: previews all 179 and, with one
+  button, fetches every image, converts each to **JPG**, names it by its timestamp
+  (`0:00 → 00-00.jpg`), and downloads them all as a single **ZIP**
+  (`video3-images-jpg.zip`). Conversion + zipping happen entirely in the browser —
+  no external libraries.
+
+## File naming
+Each image is named by the timestamp it appears at. `:` isn't a valid filename
+character, so a dash is used: `0:00 → 00-00.jpg`, `20:12 → 20-12.jpg`. Minutes and
+seconds are zero-padded so files sort in playback order.
 
 ## How to get the images
-The images live in your Higgsfield workspace and on the Higgsfield CDN. This repo
-stores the index + URLs (the environment blocks downloading the binaries here).
-Open `video3-images.html` in a browser, or run `./download.sh` on a machine with
-internet access.
-
-## Next step
-Upload the voiceover for this script and I'll assemble the finished video — images
-synced to their timestamps with the narration over the top, same as videos 1 and 2.
+The images live on the Higgsfield CDN; this repo stores the index + URLs. Open
+`video3-images-JPG-ZIP.html` in a browser for JPGs-in-a-zip, or run `./download.sh`
+on a machine with internet access for PNGs.
